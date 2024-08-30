@@ -1,0 +1,107 @@
+.MainNavbar{
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max-width: 235px) {
+    .MainNavbar{
+        padding: 5px;
+    }
+}
+
+.MainNavbar.dark{
+    background-color: var(--black-color);
+    color:var(--white-color);
+}
+
+.MainNavbar.light{
+    background-color: var(--white-color);
+    color:var(--black-color);
+}
+
+.MainNavbar header{
+    display: flex;
+    max-width: 1400px;
+}
+
+@media only screen and (max-width: 235px) {
+    .MainNavbar header{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+.LogoCnt img{
+    min-width: 70px;
+    height: auto;
+}
+
+.LgLinks{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap:25px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.MainNavbar a{
+    font-weight: 400;
+}
+
+.MainNavbar.dark a{
+    color:var(--white-color);
+}
+
+.MainNavbar.light a{
+    color:var(--white-black);
+}
+
+.MainNavbar a.active{
+    text-decoration: underline;
+}
+
+.ContactBtn{
+    background: rgb(109,72,15);
+    background: -moz-linear-gradient(0deg, rgba(109,72,15,1) 0%, rgba(248,167,9,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(109,72,15,1) 0%, rgba(248,167,9,1) 100%);
+    background: linear-gradient(0deg, rgba(109,72,15,1) 0%, rgba(248,167,9,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6d480f",endColorstr="#f8a709",GradientType=1); 
+}
+
+.Right{
+    width: fit-content;
+    flex-grow: 0!important;
+}
+
+.ThemeBtn{
+    background-color: transparent;
+}
+
+.MobileMenu{
+    padding-top: 50px;
+    margin: 40px 0px 0px;
+}
+
+.MobileMenu a{
+    font-weight: 400;
+}
+
+.MobileMenu.dark{
+    background-color: var(--black-color);
+    border-top:solid 1px var(--white-color);
+}
+
+.MobileMenu.light{
+    background-color: var(--white-color);
+    border-top:solid 1px var(--black-color);
+}
+
+.MobileMenu.dark a{
+    color:var(--white-color);
+}
+
+.MobileMenu.light a{
+    color:var(--black-color);
+}

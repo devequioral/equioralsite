@@ -1,0 +1,388 @@
+.Home{
+    height: calc(100vh - 104px);
+    position: relative;
+    overflow-x: hidden;
+}
+
+@media only screen and (max-width: 599px) {
+    .Home{
+        height: auto;
+    }   
+}
+
+.Container{
+    height: 100%;
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 2;
+}
+
+@media only screen and (max-width: 767px) {
+    .Container{
+        flex-direction: column;
+        height: auto;
+        padding-bottom: 60px;
+    }
+}
+
+.Home.dark{
+    background-color: var(--black-color);
+    color: var(--white-color);
+}
+
+.Home.light{
+    background-color: var(--white-color);
+    color: var(--black-color);
+}
+
+.BG{
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%,-50%);
+    max-height: calc(100vh - 104px);
+    width: 40vw;
+    min-width: 160px;
+    max-width: 683px;
+    z-index: 1;
+    overflow-y: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+    .BG{
+        top: 200px;
+        left: 50%;
+        transform: translate(-50%,0);
+        max-height: calc(100vh);
+        width: 50vw;
+        max-width: 683px;
+    }   
+}
+
+@media only screen and (max-width: 400px) {
+    .BG{
+        top: 220px;
+        left: 50%;
+        transform: translate(-50%,0);
+        max-height: calc(100vh);
+        width: 60vw;
+        max-width: 683px;
+    }   
+}
+
+.BG img{
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+}
+
+.Info{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
+}
+
+@media only screen and (max-width: 767px) {
+    .Info{
+        width: 100%;
+        height: 80vh;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .Info{
+        height: 70vh;
+    }
+}
+
+@media only screen and (max-width: 235px) {
+    .Info {
+        align-items: flex-start;
+        padding: 10px;
+    }
+}
+
+.InfoText{
+    display: flex;
+    flex-direction: column;
+    gap:60px;
+    flex: 1;
+}
+
+@media only screen and (max-width: 767px) {
+    .InfoText{
+        gap:20px;
+    }   
+}
+
+.InfoLinks{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    align-items: flex-start;
+}
+
+@media only screen and (max-width: 767px) {
+    .InfoLinks{
+        justify-content: flex-end;
+        align-items: center;
+        gap: 40px;
+    }
+}
+
+@media only screen and (max-width: 235px) {
+    .InfoLinks {
+        align-items: flex-start;
+    }
+}
+
+.Info .titles{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+.Info .titles h1{
+    font-size: 16px;
+    line-height: 100%;
+    font-weight: 400;
+    font-family: var(--primary-font);
+    color:rgb(248,167,9);
+}
+
+.Info .titles h2{
+    font-size: 70px;
+    line-height: 100%;
+    font-weight: 400;
+}
+
+.Info p{
+    font-size: 18px;
+    line-height: 100%;
+    font-weight: 400;
+    max-width: 400px;
+}
+
+.Home.dark .Info p{
+    color:#959595;
+}
+
+.Home.light .Info p{
+    color:#666;
+}
+
+@media only screen and (max-width: 767px) {
+    .Info .titles h1{
+        font-size: 12px;
+    }
+    .Info .titles h2{
+        font-size: 35px;
+    }
+
+    .Info p{
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 235px) {
+    .Info .titles h1{
+        font-size: 10px;
+    }
+    .Info .titles h2{
+        font-size: 25px;
+    }
+
+    .Info p{
+        font-size: 12px;
+    }
+}
+
+.Info .DirectLinks{
+    display: flex;
+    flex-direction: row;
+    gap:30px
+}
+
+.Info .DirectLinks a:hover{
+    opacity: 0.8;
+}
+
+.Info .DirectLinks img{
+    border-radius: 10px;
+    min-width: 60px;
+    height: auto;
+}
+
+.Home.dark .Info .DirectLinks img{
+    border: solid 1px #fff;
+}
+
+.Home.light .Info .DirectLinks img{
+    border: solid 1px #000;
+}
+
+
+.Whatsapp a{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 400px) {
+    .Whatsapp a{
+        font-size: 12px;
+    }   
+}
+
+.Whatsapp a:hover{
+    opacity: 0.8;
+}
+
+.Whatsapp .Icon{
+    border-radius:50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Home.dark .Whatsapp .Icon{
+    border: solid 1px #fff;
+}
+
+.Home.light .Whatsapp .Icon{
+    border: solid 1px #000;
+}
+
+@media only screen and (max-width: 400px) {
+    .Whatsapp .Icon{
+        width: 12px;
+        height: 12px;
+    }   
+}
+
+.Whatsapp span{
+    text-decoration: underline;
+}
+
+.CopyRight{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    height: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 40px;
+    transform: translate(-50%,0);
+}
+
+.CopyRight p{
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 100%;
+    width: 100%;
+    text-align: center;
+    min-width: 175px;
+}
+
+@media only screen and (max-width: 991px) {
+    .CopyRight{
+        left: 100%;
+        transform: translate(-100%,0);
+        min-width: 300px;
+        padding-right: 40px;
+        height: 60px;
+    }
+    .CopyRight p{
+        text-align: right;
+    }
+}
+
+@media only screen and (max-width: 599px) {
+    .CopyRight{
+        left: 50%;
+        transform: translate(-50%,0);
+        min-width: unset;
+        width: 100%;
+        padding: 40px;
+    }
+    .CopyRight p{
+        text-align: center;
+    }
+}
+
+.Stories{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 40px;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+@media only screen and (max-width: 767px) {
+    .Stories{
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .Stories{
+        justify-content: flex-start;
+        padding: 40px 10px;
+    }
+}
+
+.Stories a{
+    background: rgb(248,167,9);
+    background: -moz-linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
+    background: linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f8a709",endColorstr="#6d480f",GradientType=1); 
+    padding: 1px;
+    border-radius: 50%;
+}
+
+.Stories a:hover{
+    opacity: 0.8;
+}
+
+.Stories .ImgCnt{
+    border-radius: 50%;
+    padding: 5px;
+    width: 60px;
+    height: 60px;
+}
+
+.Home.dark .Stories .ImgCnt{
+    background-color: var(--black-color);
+}
+
+.Home.light .Stories .ImgCnt{
+    background-color: var(--white-color);
+}
+
+.Stories img{
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
