@@ -18,6 +18,7 @@
 @media only screen and (max-width: 599px) {
     .Page{
         flex-direction: column-reverse;
+        overflow-x: hidden;
     }
 }
 
@@ -27,6 +28,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: sticky;
+    height: 100vh;
+    top: 0;
 }
 
 .SidebarLeft .Top{
@@ -46,7 +50,7 @@
 }
 
 .Page.light .SidebarLeft{
-    border-right:solid 1px #E0E0E0;
+    border-right:solid 1px #BEBEBE;
 }
 
 .MainContent{
@@ -277,12 +281,28 @@
     display: flex;
     flex-direction: column;
     padding: 30px 20px;
+    position: sticky;
+    height: 100vh;
+    top: 0;
+}
+
+@media only screen and (max-width: 991px) {
+    .SidebarRight{
+        top:100px;
+    }
 }
 
 @media only screen and (max-width: 599px) {
     .SidebarRight{
-        padding: 0px 10px;
+        padding: 0px;
+        position: relative;
+        height: auto;
+        top: 0;
     }
+}
+
+.SidebarRightBody{
+    width: 100%;
 }
 
 .SidebarRightHeader{
@@ -297,99 +317,6 @@
     font-size: 12px;
     line-height: 100%;
     font-weight: 600;
-}
-
-.Stories{
-    height: 100%;
-    width: 244px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end;
-    padding: 40px 0;
-    gap: 20px;
-    flex-wrap: nowrap;
-}
-
-@media only screen and (max-width: 991px) {
-    .Stories{
-        width: 80px;
-    }
-}
-
-@media only screen and (max-width: 599px) {
-    .Stories{
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-        padding: 0 40px;
-    }
-}
-
-@media only screen and (max-width: 470px) {
-    .Stories{
-        padding: 10px 0;
-        justify-content: flex-start;
-    }
-}
-
-
-.Stories a:hover{
-    opacity: 0.8;
-}
-
-.Stories .ImgCnt{
-    border-radius: 50%;
-    padding: 5px;
-    width: 60px;
-    height: 60px;
-}
-
-.Page.dark .Stories .ImgCnt{
-    background-color: var(--black-color);
-}
-
-.Page.light .Stories .ImgCnt{
-    background-color: var(--white-color);
-}
-
-.Stories img{
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-}
-
-.Story{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    gap: 20px;
-}
-
-.Story .Border{
-    background: rgb(248,167,9);
-    background: -moz-linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
-    background: -webkit-linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
-    background: linear-gradient(180deg, rgba(248,167,9,1) 0%, rgba(109,72,15,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f8a709",endColorstr="#6d480f",GradientType=1); 
-    padding: 1px;
-    border-radius: 50%;
-}
-
-.StoryName{
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 100%;
-    opacity: 0.8;
-}
-
-.StoryLink{
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 100%;
-    color: #F8A709;
 }
 
 .CopyRight{
@@ -408,4 +335,12 @@
     width: 100%;
     text-align: left;
     min-width: 175px;
+}
+
+.BtnTheme{
+    cursor: pointer;
+}
+
+.BtnTheme:active{
+    opacity: 0.8;
 }

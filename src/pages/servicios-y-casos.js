@@ -1,6 +1,6 @@
 import styles from '@/styles/ServiciosCasos.module.css';
 import MainNavbar from '@/components/MainNavbar/MainNavbar';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AppContext } from '@/context/AppContext';
 import ImageComp from '@/components/ImageComp/ImageComp';
 import Link from 'next/link';
@@ -12,9 +12,17 @@ import {
   WhatsappIcon,
 } from '@virtel/icons';
 import posts from '@/data/defaultPosts.json';
+import Stories from '@/components/Stories/Stories';
 
 export default function ServiciosCasos() {
   const { state, dispatch } = useContext(AppContext);
+  const toggleTheme = () => {
+    dispatch({
+      type: 'SET_THEME',
+      theme: state.theme === 'dark' ? 'light' : 'dark',
+    });
+  };
+
   return (
     <>
       <MainNavbar className={`hide-lg hide-xl`} />
@@ -135,7 +143,7 @@ export default function ServiciosCasos() {
             className={`${styles.SidebarRightHeader} hide-xs hide-sm hide-md`}
           >
             <span>Casos Destacados</span>
-            <div className={`${styles.BtnTheme}`}>
+            <div className={`${styles.BtnTheme}`} onClick={toggleTheme}>
               {state.theme === 'dark' ? (
                 <ThemeLightIcon size={24} fill={'#fff'} />
               ) : (
@@ -144,98 +152,7 @@ export default function ServiciosCasos() {
             </div>
           </div>
           <div className={`${styles.SidebarRightBody}`}>
-            <div className={styles.Stories}>
-              <Link href="#" className={styles.Story}>
-                <div className={styles.Border}>
-                  <div className={styles.ImgCnt}>
-                    <ImageComp
-                      src="/assets/images/stories/story-01.png"
-                      width={73}
-                      height={73}
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-                  Clientes
-                </div>
-                <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-                  Ver más
-                </div>
-              </Link>
-              <Link href="#" className={styles.Story}>
-                <div className={styles.Border}>
-                  <div className={styles.ImgCnt}>
-                    <ImageComp
-                      src="/assets/images/stories/story-02.png"
-                      width={73}
-                      height={73}
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-                  Cronolo...
-                </div>
-                <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-                  Ver más
-                </div>
-              </Link>
-              <Link href="#" className={styles.Story}>
-                <div className={styles.Border}>
-                  <div className={styles.ImgCnt}>
-                    <ImageComp
-                      src="/assets/images/stories/story-03.png"
-                      width={73}
-                      height={73}
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-                  Fractura...
-                </div>
-                <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-                  Ver más
-                </div>
-              </Link>
-              <Link href="#" className={styles.Story}>
-                <div className={styles.Border}>
-                  <div className={styles.ImgCnt}>
-                    <ImageComp
-                      src="/assets/images/stories/story-03.png"
-                      width={73}
-                      height={73}
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-                  Reducci...
-                </div>
-                <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-                  Ver más
-                </div>
-              </Link>
-              <Link href="#" className={styles.Story}>
-                <div className={styles.Border}>
-                  <div className={styles.ImgCnt}>
-                    <ImageComp
-                      src="/assets/images/stories/story-03.png"
-                      width={73}
-                      height={73}
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-                  Incisivos
-                </div>
-                <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-                  Ver más
-                </div>
-              </Link>
-            </div>
+            <Stories theme={state.theme} />
           </div>
           <div className={`${styles.CopyRight} hide-xs hide-sm hide-md`}>
             <p>
