@@ -168,15 +168,21 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
           <NextFilledIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} />
         </div>
       )}
-      <div ref={circlesMarksRef} className={styles.CirclesMarks}>
-        {data.map((media, i) => (
-          <div
-            className={`${styles.CircleMark} ${
-              currentSlide === i + 1 ? styles.active : ''
-            }`}
-            key={i}
-          ></div>
-        ))}
+      <div
+        ref={circlesMarksRef}
+        className={`${styles.CirclesMarks} ${
+          data.length < 6 ? styles.alignCenter : ''
+        }`}
+      >
+        {data.length > 1 &&
+          data.map((media, i) => (
+            <div
+              className={`${styles.CircleMark} ${
+                currentSlide === i + 1 ? styles.active : ''
+              }`}
+              key={i}
+            ></div>
+          ))}
       </div>
     </div>
   );
