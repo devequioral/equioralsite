@@ -60,7 +60,7 @@
 
 
 .Page.dark img{
-    filter: drop-shadow(0 0 0.75rem #151313);
+    filter:drop-shadow(0 0 0.75rem #242222)
 }
 
 .Page.light img{
@@ -170,7 +170,6 @@
     .Column .titles h2{
         font-size: 50px;
     }
-
     .Column p{
         font-size: 16px;
     }
@@ -186,6 +185,19 @@
 
     .Column p{
         font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .Column .titles h1{
+        font-size: 10px;
+    }
+    .Column .titles h2{
+        font-size: 30px;
+    }
+
+    .Column p{
+        font-size: 12px;
     }
 }
 
@@ -281,7 +293,6 @@
 }
 
 .CopyRight{
-    height: 60px;
     max-width: 300px;
     display: flex;
     flex-direction: column;
@@ -301,25 +312,23 @@
 @media only screen and (max-width: 991px) {
     .CopyRight{
         left: 100%;
-        transform: translate(-100%,0);
         min-width: 300px;
         padding-right: 40px;
     }
     .CopyRight p{
-        text-align: right;
+        text-align: left;
     }
 }
 
 @media only screen and (max-width: 599px) {
     .CopyRight{
         left: 50%;
-        transform: translate(-50%,0);
         min-width: unset;
         width: 100%;
-        padding: 40px;
+        padding: 0px 0;
     }
     .CopyRight p{
-        text-align: center;
+        text-align: left;
     }
 }
 
@@ -437,7 +446,7 @@
 
 .GroupField .InputWrapperError{
     background: transparent!important;
-    border: solid 1px #f04040;
+    border: solid 1px #f04040!important;
 }
 
 .GroupField .ErrorMessage{
@@ -451,4 +460,26 @@
 .Form .BtnSend{
     background-color: #F8A709;
     width: 100px;
+}
+
+.FormBottom{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;   
+    align-items: center;
+}
+
+@media only screen and (max-width: 500px) {
+    .FormBottom{
+        flex-direction: column;
+    }
+}
+
+.Notification{
+    color: red!important;
+    font-size: 14px!important;
+}
+
+.Notification.success{
+    color:green!important;
 }

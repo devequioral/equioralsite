@@ -87,7 +87,7 @@ export default function MainNavbar({ className }) {
 
       <NavbarContent justify="end" className={styles.Right}>
         <NavbarItem className="hide-xs hide-sm">
-          <Button as={Link} href="#" className={styles.ContactBtn}>
+          <Button as={Link} href="/contactanos" className={styles.ContactBtn}>
             Contacto
           </Button>
         </NavbarItem>
