@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.6",
-    "@virtel/icons": "^1.0.9",
+    "@virtel/icons": "^0.0.12",
     "formidable": "^3.5.1",
     "framer-motion": "^11.3.30",
     "lodash": "^4.17.21",

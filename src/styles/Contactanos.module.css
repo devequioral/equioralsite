@@ -483,3 +483,19 @@
 .Notification.success{
     color:green!important;
 }
+
+.StoriesCnt{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 40px;
+}
+
+@media only screen and (max-width: 600px) {
+    .StoriesCnt{
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+        padding: 40px 10px;
+    }
+}

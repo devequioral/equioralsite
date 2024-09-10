@@ -18,12 +18,23 @@ import Carousel from '@/components/Carousel/Carousel';
 
 export default function ServiciosCasos() {
   const { state, dispatch } = useContext(AppContext);
+  const [screenWidth, setScreenWidth] = useState();
   const toggleTheme = () => {
     dispatch({
       type: 'SET_THEME',
       theme: state.theme === 'dark' ? 'light' : 'dark',
     });
   };
+
+  useEffect(() => {
+    if (!window) return;
+    const handleResize = () => {
+      setScreenWidth(window.screen.width);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
@@ -152,6 +163,9 @@ export default function ServiciosCasos() {
               edgeOffset={40}
               mobileBreakpoint={599}
               data={storiesData}
+              showName={true}
+              showLinkLabel={screenWidth > 991 ? true : false}
+              storyFlex={screenWidth > 991 ? 'row' : 'column'}
             />
           </div>
           <div className={`${styles.CopyRight} hide-xs hide-sm hide-md`}>

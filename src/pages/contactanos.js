@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { WhatsappIcon } from '@virtel/icons';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import lodash from 'lodash';
+import storiesData from '@/data/defaultStories.json';
+import Stories from '@/components/Stories/Stories';
 
 const InputComp = (props) => {
   const { styles, type, label, name, validation } = { ...props };
@@ -213,68 +215,16 @@ export default function Contactanos() {
               </div>
             </div>
           </div>
-
-          <div className={styles.Stories}>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-01.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-02.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-03.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-04.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-05.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
-            <Link href="#" className={styles.Story}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src="/assets/images/stories/story-06.png"
-                  width={73}
-                  height={73}
-                  alt=""
-                />
-              </div>
-            </Link>
+          <div className={styles.StoriesCnt}>
+            <Stories
+              theme={state.theme}
+              edgeOffset={40}
+              mobileBreakpoint={600}
+              data={storiesData}
+              showName={true}
+              showLinkLabel={false}
+              storyFlex="column"
+            />
           </div>
         </div>
       </div>

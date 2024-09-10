@@ -9,8 +9,12 @@ export default function Stories({
   theme,
   mobileBreakpoint = 599,
   edgeOffset = 0,
+  showName = false,
+  showLinkLabel = false,
+  storyFlex = 'row',
 }) {
   const storiesRef = useRef();
+  const [orientation, setOrientation] = useState();
   const [currentPos, setCurrentPos] = useState();
   const [clientX, setClientX] = useState();
   const [compWidth, setCompWidth] = useState();
@@ -25,13 +29,22 @@ export default function Stories({
   useEffect(() => {
     if (!window) return;
     if (!storiesRef.current) return;
-    const boundingStories = storiesRef.current.getBoundingClientRect();
-    setMaxDistance(
-      (boundingStories.width - (window.screen.width - edgeOffset)) * -1
-    );
-    setMinDistance(0);
-    setCompWidth(boundingStories.width);
-    setScreenWidth(window.screen.width);
+
+    const handleResize = () => {
+      const boundingStories = storiesRef.current.getBoundingClientRect();
+      setMaxDistance(
+        (boundingStories.width - (window.screen.width - edgeOffset)) * -1
+      );
+      setMinDistance(0);
+      setCompWidth(boundingStories.width);
+      setScreenWidth(window.screen.width);
+      setOrientation(
+        window.screen.width > mobileBreakpoint ? 'vertical' : 'horizontal'
+      );
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const onTouchStart = (e) => {
@@ -55,8 +68,12 @@ export default function Stories({
   };
 
   useEffect(() => {
-    setShowNextNav(translateValue > maxDistance && compWidth > screenWidth);
-    setShowPreNav(translateValue < minDistance);
+    setShowNextNav(
+      orientation === 'horizontal' &&
+        translateValue > maxDistance &&
+        compWidth > screenWidth
+    );
+    setShowPreNav(orientation === 'horizontal' && translateValue < minDistance);
     let timer = setTimeout(() => {
       if (storiesRef.current) {
         const boundingStories = storiesRef.current.getBoundingClientRect();
@@ -88,32 +105,37 @@ export default function Stories({
   };
   return (
     <div
-      className={`${styles.StoriesContainer} ${styles[theme]}`}
+      className={`${styles.StoriesContainer} ${styles[theme]} ${styles[orientation]}`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       <div ref={storiesRef} className={styles.Stories}>
-        {data.map((story, i) => (
-          <Link href={story.link.url} className={styles.Story} key={i}>
-            <div className={styles.Border}>
-              <div className={styles.ImgCnt}>
-                <ImageComp
-                  src={story.media.url}
-                  width={story.media.width}
-                  height={story.media.height}
-                  alt={story.media.alt}
-                />
+        {orientation &&
+          data.map((story, i) => (
+            <Link
+              href={story.link.url}
+              className={`${styles.Story} ${styles[storyFlex]}`}
+              key={i}
+            >
+              <div className={styles.Border}>
+                <div className={styles.ImgCnt}>
+                  <ImageComp
+                    src={story.media.url}
+                    width={story.media.width}
+                    height={story.media.height}
+                    alt={story.media.alt}
+                  />
+                </div>
               </div>
-            </div>
-            <div className={`${styles.StoryName} hide-xs hide-sm hide-md`}>
-              {story.name.text}
-            </div>
-            <div className={`${styles.StoryLink} hide-xs hide-sm hide-md`}>
-              {story.link.label}
-            </div>
-          </Link>
-        ))}
+              {showName && (
+                <div className={`${styles.StoryName}`}>{story.name.text}</div>
+              )}
+              {showLinkLabel && (
+                <div className={`${styles.StoryLink}`}>{story.link.label}</div>
+              )}
+            </Link>
+          ))}
       </div>
       {showPreNav && (
         <div className={styles.PrevNav} onClick={onClickPrevNav}>
