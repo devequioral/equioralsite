@@ -14,11 +14,13 @@ import ImageComp from '@/components/ImageComp/ImageComp';
 import styles from './MainNavbar.module.css';
 import { ThemeLightIcon, HamburguerIcon, ThemeDarkIcon } from '@virtel/icons';
 import { AppContext } from '@/context/AppContext';
+import { useSession } from 'next-auth/react';
 
 export default function MainNavbar({ className }) {
   const [linkActive, seLinkActive] = React.useState('/');
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { state, dispatch } = useContext(AppContext);
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (!document) return;
@@ -36,6 +38,11 @@ export default function MainNavbar({ className }) {
     { label: 'Inicio', href: '/', className: '' },
     { label: 'Acerca', href: '/quienes-somos', className: '' },
     { label: 'Servicios y Casos', href: '/servicios-y-casos', className: '' },
+    {
+      label: session?.user ? 'Logout' : 'Login',
+      href: session?.user ? '/close-session' : '/login',
+      className: '',
+    },
     {
       label: 'Contáctanos',
       href: '/contactanos',

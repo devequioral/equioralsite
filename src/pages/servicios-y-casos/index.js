@@ -66,6 +66,7 @@ export default function ServiciosCasos() {
               <Link href="/quienes-somos">Acerca</Link>
               <Link href="/servicios-y-casos">Servicios & Casos</Link>
               <Link href="/contactanos">Contacto</Link>
+              <Link href="/login">Login</Link>
             </div>
           </div>
           <div className={styles.Bottom}>

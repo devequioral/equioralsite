@@ -37,7 +37,7 @@ function getDocHeight() {
 function getPost() {
   return postsData[0];
 }
-export default function ScreenCaso({ slug }) {
+function ScreenCaso({ slug }) {
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -124,6 +124,7 @@ export default function ScreenCaso({ slug }) {
               <Link href="/quienes-somos">Acerca</Link>
               <Link href="/servicios-y-casos">Servicios & Casos</Link>
               <Link href="/contactanos">Contacto</Link>
+              <Link href="/login">Login</Link>
             </div>
           </div>
           <div className={styles.Bottom}>
@@ -351,7 +352,6 @@ export async function getStaticPaths() {
       });
     }
   }
-  console.log(paths);
   return {
     paths,
     fallback: 'blocking',
@@ -367,3 +367,5 @@ export async function getStaticProps(slug) {
     revalidate: 10,
   };
 }
+
+export default ScreenCaso;
