@@ -16,6 +16,9 @@ import storiesData from '@/data/defaultStories.json';
 import Stories from '@/components/Stories/Stories';
 import Carousel from '@/components/Carousel/Carousel';
 import { Button } from '@nextui-org/react';
+import Metaheader from '@/components/Metaheader/Metaheader';
+import Layout from '@/components/Layout/Layout';
+import { useSession } from 'next-auth/react';
 
 async function listPosts(page) {
   await new Promise((res) => setTimeout(res, 5000));
@@ -38,6 +41,7 @@ function getPost() {
   return postsData[0];
 }
 function ScreenCaso({ slug }) {
+  const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -96,224 +100,230 @@ function ScreenCaso({ slug }) {
   }, [currentPage, loadingExtraPosts]);
   return (
     <>
-      <MainNavbar className={`hide-lg hide-xl`} />
-      <div className={`${styles.Page} ${styles[state.theme]}`}>
-        <div className={`${styles.SidebarLeft} hide-xs hide-sm hide-md`}>
-          <div className={styles.Top}>
-            <div className={styles.LogoContainer}>
-              <Link href="/">
-                {state.theme === 'dark' ? (
-                  <ImageComp
-                    src="/assets/images/logo-light.png"
-                    width={116}
-                    height={59}
-                    alt="Logo"
-                  />
-                ) : (
-                  <ImageComp
-                    src="/assets/images/logo-dark.png"
-                    width={116}
-                    height={59}
-                    alt="Logo"
-                  />
-                )}
-              </Link>
-            </div>
-            <div className={styles.Nav}>
-              <Link href="/">Inicio</Link>
-              <Link href="/quienes-somos">Acerca</Link>
-              <Link href="/servicios-y-casos">Servicios & Casos</Link>
-              <Link href="/contactanos">Contacto</Link>
-              <Link href="/login">Login</Link>
-            </div>
-          </div>
-          <div className={styles.Bottom}>
-            <div className={styles.Whatsapp}>
-              <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                <div className={styles.Icon}>
-                  <WhatsappIcon
-                    size={12}
-                    fill={state.theme === 'dark' ? '#fff' : '#000'}
-                  />
-                </div>
-                <span>Contáctame por Whatsapp</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className={styles.MainContent}>
-          <div className={styles.Container}>
-            <div className={styles.Post}>
-              <div className={styles.HeaderPost}>
-                <div className={styles.LogoSmall}>
+      <Metaheader />
+      <Layout navbarClass={`hide-lg hide-xl`} session={session}>
+        <div className={`${styles.Page} ${styles[state.theme]}`}>
+          <div className={`${styles.SidebarLeft} hide-xs hide-sm hide-md`}>
+            <div className={styles.Top}>
+              <div className={styles.LogoContainer}>
+                <Link href="/">
                   {state.theme === 'dark' ? (
                     <ImageComp
-                      src="/assets/images/logo-light-small.png"
-                      width={41}
-                      height={42}
-                      alt=""
+                      src="/assets/images/logo-light.png"
+                      width={116}
+                      height={59}
+                      alt="Logo"
                     />
                   ) : (
                     <ImageComp
-                      src="/assets/images/logo-dark-small.png"
-                      width={41}
-                      height={42}
-                      alt=""
+                      src="/assets/images/logo-dark.png"
+                      width={116}
+                      height={59}
+                      alt="Logo"
                     />
                   )}
-                </div>
-                <span>Equioral</span>
+                </Link>
               </div>
-              <Carousel theme={state.theme} data={currentPost.media} />
-              <div className={styles.ActionsPost}>
-                <div className={styles.Left}>
-                  <div className={styles.Action}>
-                    <HeartIcon
-                      fill={state.theme === 'dark' ? '#fff' : '#000'}
-                      size={24}
-                    />
-                  </div>
-                  <div className={styles.Action}>
-                    <ShareIcon
-                      fill={state.theme === 'dark' ? '#fff' : '#000'}
-                      size={24}
-                    />
-                  </div>
-                </div>
-                <div className={styles.Right}>
-                  <div className={styles.Action}>
-                    <WhatsappIcon
-                      fill={state.theme === 'dark' ? '#fff' : '#000'}
-                      size={24}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.InfoPost}>
-                <div className={styles.Title}>
-                  <div className={styles.Name}>{currentPost.info.title}</div>
-                  <div className={styles.Date}>{currentPost.info.date}</div>
-                </div>
-                <div className={styles.Description}>
-                  {currentPost.info.description}
-                </div>
+              <div className={styles.Nav}>
+                <Link href="/">Inicio</Link>
+                <Link href="/quienes-somos">Acerca</Link>
+                <Link href="/servicios-y-casos">Servicios & Casos</Link>
+                <Link href="/contactanos">Contacto</Link>
+                <Link href={session?.user ? '/close-session' : '/login'}>
+                  {session?.user ? 'Logout' : 'Login'}
+                </Link>
               </div>
             </div>
-            {extraPosts.length > 0 &&
-              extraPosts.map(
-                (post, i) =>
-                  post.id !== currentPost.id && (
-                    <div className={styles.Post} key={i}>
-                      <div className={styles.HeaderPost}>
-                        <div className={styles.LogoSmall}>
-                          {state.theme === 'dark' ? (
-                            <ImageComp
-                              src="/assets/images/logo-light-small.png"
-                              width={41}
-                              height={42}
-                              alt=""
-                            />
-                          ) : (
-                            <ImageComp
-                              src="/assets/images/logo-dark-small.png"
-                              width={41}
-                              height={42}
-                              alt=""
-                            />
-                          )}
-                        </div>
-                        <span>Equioral</span>
-                      </div>
-                      <Carousel theme={state.theme} data={post.media} />
-                      <div className={styles.ActionsPost}>
-                        <div className={styles.Left}>
-                          <div className={styles.Action}>
-                            <HeartIcon
-                              fill={state.theme === 'dark' ? '#fff' : '#000'}
-                              size={24}
-                            />
-                          </div>
-                          <div className={styles.Action}>
-                            <ShareIcon
-                              fill={state.theme === 'dark' ? '#fff' : '#000'}
-                              size={24}
-                            />
-                          </div>
-                        </div>
-                        <div className={styles.Right}>
-                          <div className={styles.Action}>
-                            <WhatsappIcon
-                              fill={state.theme === 'dark' ? '#fff' : '#000'}
-                              size={24}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles.InfoPost}>
-                        <div className={styles.Title}>
-                          <div className={styles.Name}>{post.info.title}</div>
-                          <div className={styles.Date}>{post.info.date}</div>
-                        </div>
-                        <div className={styles.Description}>
-                          {post.info.description}
-                        </div>
-                      </div>
-                    </div>
-                  )
-              )}
-            {extraPosts.length > 0 && currentPage < totalPages && (
-              <Button
-                className={styles.BtnLoadMore}
-                onClick={fetchPosts}
-                isLoading={loadingExtraPosts}
-              >
-                Cargar Más Casos
-              </Button>
-            )}
-            {extraPosts.length == 0 && (
+            <div className={styles.Bottom}>
+              <div className={styles.Whatsapp}>
+                <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
+                  <div className={styles.Icon}>
+                    <WhatsappIcon
+                      size={12}
+                      fill={state.theme === 'dark' ? '#fff' : '#000'}
+                    />
+                  </div>
+                  <span>Contáctame por Whatsapp</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className={styles.MainContent}>
+            <div className={styles.Container}>
               <div className={styles.Post}>
                 <div className={styles.HeaderPost}>
-                  <div className={`${styles.LogoSmall} skeleton`}></div>
-                  <span className={`${styles.LogoSmallLabel} skeleton`}></span>
+                  <div className={styles.LogoSmall}>
+                    {state.theme === 'dark' ? (
+                      <ImageComp
+                        src="/assets/images/logo-light-small.png"
+                        width={41}
+                        height={42}
+                        alt=""
+                      />
+                    ) : (
+                      <ImageComp
+                        src="/assets/images/logo-dark-small.png"
+                        width={41}
+                        height={42}
+                        alt=""
+                      />
+                    )}
+                  </div>
+                  <span>Equioral</span>
                 </div>
-                <div className={`${styles.CarouselBlank} skeleton`} />
-                <div className={`${styles.InfoPost} skeleton`}></div>
+                <Carousel theme={state.theme} data={currentPost.media} />
+                <div className={styles.ActionsPost}>
+                  <div className={styles.Left}>
+                    <div className={styles.Action}>
+                      <HeartIcon
+                        fill={state.theme === 'dark' ? '#fff' : '#000'}
+                        size={24}
+                      />
+                    </div>
+                    <div className={styles.Action}>
+                      <ShareIcon
+                        fill={state.theme === 'dark' ? '#fff' : '#000'}
+                        size={24}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.Right}>
+                    <div className={styles.Action}>
+                      <WhatsappIcon
+                        fill={state.theme === 'dark' ? '#fff' : '#000'}
+                        size={24}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.InfoPost}>
+                  <div className={styles.Title}>
+                    <div className={styles.Name}>{currentPost.info.title}</div>
+                    <div className={styles.Date}>{currentPost.info.date}</div>
+                  </div>
+                  <div className={styles.Description}>
+                    {currentPost.info.description}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-        <div className={`${styles.SidebarRight}`}>
-          <div
-            className={`${styles.SidebarRightHeader} hide-xs hide-sm hide-md`}
-          >
-            <span>Casos Destacados</span>
-            <div className={`${styles.BtnTheme}`} onClick={toggleTheme}>
-              {state.theme === 'dark' ? (
-                <ThemeLightIcon size={24} fill={'#fff'} />
-              ) : (
-                <ThemeDarkIcon size={24} fill={'#000'} />
+              {extraPosts.length > 0 &&
+                extraPosts.map(
+                  (post, i) =>
+                    post.id !== currentPost.id && (
+                      <div className={styles.Post} key={i}>
+                        <div className={styles.HeaderPost}>
+                          <div className={styles.LogoSmall}>
+                            {state.theme === 'dark' ? (
+                              <ImageComp
+                                src="/assets/images/logo-light-small.png"
+                                width={41}
+                                height={42}
+                                alt=""
+                              />
+                            ) : (
+                              <ImageComp
+                                src="/assets/images/logo-dark-small.png"
+                                width={41}
+                                height={42}
+                                alt=""
+                              />
+                            )}
+                          </div>
+                          <span>Equioral</span>
+                        </div>
+                        <Carousel theme={state.theme} data={post.media} />
+                        <div className={styles.ActionsPost}>
+                          <div className={styles.Left}>
+                            <div className={styles.Action}>
+                              <HeartIcon
+                                fill={state.theme === 'dark' ? '#fff' : '#000'}
+                                size={24}
+                              />
+                            </div>
+                            <div className={styles.Action}>
+                              <ShareIcon
+                                fill={state.theme === 'dark' ? '#fff' : '#000'}
+                                size={24}
+                              />
+                            </div>
+                          </div>
+                          <div className={styles.Right}>
+                            <div className={styles.Action}>
+                              <WhatsappIcon
+                                fill={state.theme === 'dark' ? '#fff' : '#000'}
+                                size={24}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.InfoPost}>
+                          <div className={styles.Title}>
+                            <div className={styles.Name}>{post.info.title}</div>
+                            <div className={styles.Date}>{post.info.date}</div>
+                          </div>
+                          <div className={styles.Description}>
+                            {post.info.description}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                )}
+              {extraPosts.length > 0 && currentPage < totalPages && (
+                <Button
+                  className={styles.BtnLoadMore}
+                  onClick={fetchPosts}
+                  isLoading={loadingExtraPosts}
+                >
+                  Cargar Más Casos
+                </Button>
+              )}
+              {extraPosts.length == 0 && (
+                <div className={styles.Post}>
+                  <div className={styles.HeaderPost}>
+                    <div className={`${styles.LogoSmall} skeleton`}></div>
+                    <span
+                      className={`${styles.LogoSmallLabel} skeleton`}
+                    ></span>
+                  </div>
+                  <div className={`${styles.CarouselBlank} skeleton`} />
+                  <div className={`${styles.InfoPost} skeleton`}></div>
+                </div>
               )}
             </div>
           </div>
-          <div className={`${styles.SidebarRightBody}`}>
-            <Stories
-              theme={state.theme}
-              edgeOffset={40}
-              mobileBreakpoint={599}
-              data={storiesData}
-              showName={true}
-              showLinkLabel={screenWidth > 991 ? true : false}
-              storyFlex={screenWidth > 991 ? 'row' : 'column'}
-            />
-          </div>
-          <div className={`${styles.CopyRight} hide-xs hide-sm hide-md`}>
-            <p>
-              &copy; Equioral Todos los Derechos Reservados{' '}
-              {new Date().getFullYear()}. Powered By Virtel
-            </p>
+          <div className={`${styles.SidebarRight}`}>
+            <div
+              className={`${styles.SidebarRightHeader} hide-xs hide-sm hide-md`}
+            >
+              <span>Casos Destacados</span>
+              <div className={`${styles.BtnTheme}`} onClick={toggleTheme}>
+                {state.theme === 'dark' ? (
+                  <ThemeLightIcon size={24} fill={'#fff'} />
+                ) : (
+                  <ThemeDarkIcon size={24} fill={'#000'} />
+                )}
+              </div>
+            </div>
+            <div className={`${styles.SidebarRightBody}`}>
+              <Stories
+                theme={state.theme}
+                edgeOffset={40}
+                mobileBreakpoint={599}
+                data={storiesData}
+                showName={true}
+                showLinkLabel={screenWidth > 991 ? true : false}
+                storyFlex={screenWidth > 991 ? 'row' : 'column'}
+              />
+            </div>
+            <div className={`${styles.CopyRight} hide-xs hide-sm hide-md`}>
+              <p>
+                &copy; Equioral Todos los Derechos Reservados{' '}
+                {new Date().getFullYear()}. Powered By Virtel
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

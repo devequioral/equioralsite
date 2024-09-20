@@ -14,13 +14,11 @@ import ImageComp from '@/components/ImageComp/ImageComp';
 import styles from './MainNavbar.module.css';
 import { ThemeLightIcon, HamburguerIcon, ThemeDarkIcon } from '@virtel/icons';
 import { AppContext } from '@/context/AppContext';
-import { useSession } from 'next-auth/react';
 
-export default function MainNavbar({ className }) {
+export default function MainNavbar({ className, session }) {
   const [linkActive, seLinkActive] = React.useState('/');
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { state, dispatch } = useContext(AppContext);
-  const { data: session } = useSession();
 
   useEffect(() => {
     if (!document) return;

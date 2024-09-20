@@ -1,3 +1,4 @@
+import Metaheader from '@/components/Metaheader/Metaheader';
 import { signOut } from 'next-auth/react';
 import React, { useEffect } from 'react';
 
@@ -10,7 +11,7 @@ export default function CloseSessionScreen() {
   }, []);
   return (
     <>
-      <p>Closing Session...</p>
+      <Metaheader />
     </>
   );
 }

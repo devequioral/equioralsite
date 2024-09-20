@@ -9,6 +9,9 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import lodash from 'lodash';
 import storiesData from '@/data/defaultStories.json';
 import Stories from '@/components/Stories/Stories';
+import Metaheader from '@/components/Metaheader/Metaheader';
+import Layout from '@/components/Layout/Layout';
+import { useSession } from 'next-auth/react';
 
 const InputComp = (props) => {
   const { styles, type, label, name, validation } = { ...props };
@@ -63,6 +66,7 @@ const sendContact = async (formdata) => {
 };
 
 export default function Contactanos() {
+  const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [validation, setValidation] = useState({});
   const [isSubmiting, setIsSubmitting] = useState(false);
@@ -108,126 +112,128 @@ export default function Contactanos() {
   };
   return (
     <>
-      <MainNavbar />
-      <div className={`${styles.Page} ${styles[state.theme]}`}>
-        <div className={styles.Container}>
-          <div className={styles.Left}>
-            <div className={`${styles.Column} hide-xs hide-sm hide-md`}>
-              <ImageComp
-                src="/assets/images/img-contactus.png"
-                width={300}
-                height={225}
-                alt=""
-              />
-              <div className={styles.InfoLinks}>
-                <div className={styles.Whatsapp}>
-                  <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                    <div className={styles.Icon}>
-                      <WhatsappIcon
-                        size={12}
-                        fill={state.theme === 'dark' ? '#fff' : '#000'}
-                      />
-                    </div>
-                    <span>Contáctame por Whatsapp</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className={styles.Column}>
-              <div className={styles.InfoText}>
-                <div className={styles.titles}>
-                  <h2>¿Conversamos?</h2>
-                </div>
-                <p>
-                  Por favor, Complete el siguiente Formulario y con mucho gusto
-                  le responderé a la brevedad posible.
-                </p>
-                <form
-                  ref={formRef}
-                  className={styles.Form}
-                  onSubmit={onSendForm}
-                >
-                  <InputComp
-                    type="text"
-                    label="Nombre *"
-                    name="name"
-                    styles={styles}
-                    validation={validation.name}
-                  />
-                  <InputComp
-                    type="text"
-                    label="Apellido *"
-                    name="lastname"
-                    styles={styles}
-                    validation={validation.lastname}
-                  />
-                  <InputComp
-                    type="email"
-                    label="Email *"
-                    name="email"
-                    styles={styles}
-                    validation={validation.email}
-                  />
-                  <InputComp
-                    type="text"
-                    label="Teléfono *"
-                    name="phone"
-                    styles={styles}
-                    validation={validation.phone}
-                  />
-                  <InputComp
-                    type="text"
-                    label="Asunto *"
-                    name="subject"
-                    styles={styles}
-                    validation={validation.subject}
-                  />
-                  <InputComp
-                    type="textarea"
-                    label="Mensaje *"
-                    name="message"
-                    styles={styles}
-                    validation={validation.message}
-                  />
-                  <div className={`${styles.FormBottom}`}>
-                    <Button
-                      className={styles.BtnSend}
-                      onClick={onSendForm}
-                      isDisabled={isSubmiting}
-                    >
-                      Enviar
-                    </Button>
-                    <p
-                      className={`${styles.Notification} ${
-                        notification.success ? styles.success : ''
-                      }`}
-                    >
-                      {notification.message}
-                    </p>
+      <Metaheader />
+      <Layout session={session}>
+        <div className={`${styles.Page} ${styles[state.theme]}`}>
+          <div className={styles.Container}>
+            <div className={styles.Left}>
+              <div className={`${styles.Column} hide-xs hide-sm hide-md`}>
+                <ImageComp
+                  src="/assets/images/img-contactus.png"
+                  width={300}
+                  height={225}
+                  alt=""
+                />
+                <div className={styles.InfoLinks}>
+                  <div className={styles.Whatsapp}>
+                    <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
+                      <div className={styles.Icon}>
+                        <WhatsappIcon
+                          size={12}
+                          fill={state.theme === 'dark' ? '#fff' : '#000'}
+                        />
+                      </div>
+                      <span>Contáctame por Whatsapp</span>
+                    </Link>
                   </div>
-                </form>
+                </div>
               </div>
-              <div className={styles.CopyRight}>
-                <p>
-                  &copy; Equioral Todos los Derechos Reservados{' '}
-                  {new Date().getFullYear()}. Powered By Virtel
-                </p>
+              <div className={styles.Column}>
+                <div className={styles.InfoText}>
+                  <div className={styles.titles}>
+                    <h2>¿Conversamos?</h2>
+                  </div>
+                  <p>
+                    Por favor, Complete el siguiente Formulario y con mucho
+                    gusto le responderé a la brevedad posible.
+                  </p>
+                  <form
+                    ref={formRef}
+                    className={styles.Form}
+                    onSubmit={onSendForm}
+                  >
+                    <InputComp
+                      type="text"
+                      label="Nombre *"
+                      name="name"
+                      styles={styles}
+                      validation={validation.name}
+                    />
+                    <InputComp
+                      type="text"
+                      label="Apellido *"
+                      name="lastname"
+                      styles={styles}
+                      validation={validation.lastname}
+                    />
+                    <InputComp
+                      type="email"
+                      label="Email *"
+                      name="email"
+                      styles={styles}
+                      validation={validation.email}
+                    />
+                    <InputComp
+                      type="text"
+                      label="Teléfono *"
+                      name="phone"
+                      styles={styles}
+                      validation={validation.phone}
+                    />
+                    <InputComp
+                      type="text"
+                      label="Asunto *"
+                      name="subject"
+                      styles={styles}
+                      validation={validation.subject}
+                    />
+                    <InputComp
+                      type="textarea"
+                      label="Mensaje *"
+                      name="message"
+                      styles={styles}
+                      validation={validation.message}
+                    />
+                    <div className={`${styles.FormBottom}`}>
+                      <Button
+                        className={styles.BtnSend}
+                        onClick={onSendForm}
+                        isDisabled={isSubmiting}
+                      >
+                        Enviar
+                      </Button>
+                      <p
+                        className={`${styles.Notification} ${
+                          notification.success ? styles.success : ''
+                        }`}
+                      >
+                        {notification.message}
+                      </p>
+                    </div>
+                  </form>
+                </div>
+                <div className={styles.CopyRight}>
+                  <p>
+                    &copy; Equioral Todos los Derechos Reservados{' '}
+                    {new Date().getFullYear()}. Powered By Virtel
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className={styles.StoriesCnt}>
-            <Stories
-              theme={state.theme}
-              edgeOffset={40}
-              mobileBreakpoint={600}
-              data={storiesData}
-              showName={true}
-              showLinkLabel={false}
-              storyFlex="column"
-            />
+            <div className={styles.StoriesCnt}>
+              <Stories
+                theme={state.theme}
+                edgeOffset={40}
+                mobileBreakpoint={600}
+                data={storiesData}
+                showName={true}
+                showLinkLabel={false}
+                storyFlex="column"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }
