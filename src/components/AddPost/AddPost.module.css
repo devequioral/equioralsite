@@ -15,9 +15,64 @@
     width: 60px;
     height: 60px;
 }
+.InputGroup{
+  display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
 .Inputs{
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+
+.MediaUploadInput {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .MediaUploadInputLabel {
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    cursor: pointer;
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+    padding: 0.5em 0.75em;
+    background-color: #0070f0;
+    border-radius: 0.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .label:focus,
+  .label:hover {
+    opacity: 0.8;
+  }
+
+  .PhotoPreviews{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .PhotoPreview{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+  }
+
+  .PhotoPreview img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }

@@ -11,19 +11,33 @@ import {
 } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { toast } from 'react-toastify';
+import MediaUpload from '../MediaUpload/MediaUpload';
 
-async function createPost(title, description, date) {
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/new`;
-  console.log(url);
+async function createPost(title, description, date, photos) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/new`;
+  const body = new FormData();
+  body.append('title', title);
+  body.append('description', description);
+  body.append('date', date);
+  let count_photos = 0;
+  photos.map((p) => {
+    body.append(p.name, p.photo);
+    count_photos++;
+  });
+  body.append('count_photos', count_photos);
   return await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      record: { title, description, date },
-    }),
+    body,
   });
+  // return await fetch(url, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({
+  //     record: { title, description, date },
+  //   }),
+  // });
 }
 
 export default function AddPost() {
@@ -32,13 +46,15 @@ export default function AddPost() {
   const [savingPost, setSavingPost] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [photos, setPhotos] = useState([]);
+  const [photosPreview, setPhotosPreview] = useState([]);
   const [date, setDate] = React.useState(
     parseAbsoluteToLocal(new Date().toISOString())
   );
   const onSavePost = async () => {
     setSavingPost(true);
     const date_str = date.toDate(getLocalTimeZone()).toISOString();
-    const resp = await createPost(title, description, date_str);
+    const resp = await createPost(title, description, date_str, photos);
     if (resp.ok) {
       setShowModal(0);
       setTitle('');
@@ -56,6 +72,17 @@ export default function AddPost() {
       setAllowSave(false);
     }
   }, [title, description]);
+  const onSelectPhoto = (e) => {
+    const _photos = [...photos];
+    _photos.push({
+      name: `Photo-${_photos.length + 1}`,
+      photo: e.target.files[0],
+    });
+    setPhotos(_photos);
+    const preview = URL.createObjectURL(e.target.files[0]);
+    setPhotosPreview((c) => [...c, preview]);
+  };
+
   return (
     <>
       <div className={styles.AddPostButton}>
@@ -101,7 +128,22 @@ export default function AddPost() {
             </I18nProvider>
           </div>
           <div className={styles.InputGroup}>
-            <Button>Agrega Foto</Button>
+            <input
+              type="file"
+              id="file"
+              onChange={onSelectPhoto}
+              className={styles.MediaUploadInput}
+            />
+            <div className={styles.PhotoPreviews}>
+              {photosPreview.map((preview, i) => (
+                <div className={styles.PhotoPreview} key={i}>
+                  <img src={preview} alt="" />
+                </div>
+              ))}
+            </div>
+            <label htmlFor="file" className={styles.MediaUploadInputLabel}>
+              Agregar Foto
+            </label>
           </div>
         </div>
       </ModalComponent>
