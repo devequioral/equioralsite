@@ -10,18 +10,26 @@ import {
   ThemeLightIcon,
   WhatsappIcon,
 } from '@virtel/icons';
-import defaultPosts from '@/data/defaultPosts.json';
 import storiesData from '@/data/defaultStories.json';
 import Stories from '@/components/Stories/Stories';
-import Carousel from '@/components/Carousel/Carousel';
 import Metaheader from '@/components/Metaheader/Metaheader';
 import Layout from '@/components/Layout/Layout';
 import { useSession } from 'next-auth/react';
-import { formatDate } from '@/utils/utils';
+import { toast } from 'react-toastify';
 import Post from '@/components/Post/Post';
 
 async function getPosts(page = 1, pageSize = 20, search = '') {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+async function deletePost(uid) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/delete?uid=${uid}`;
   return await fetch(url, {
     method: 'GET',
     headers: {
@@ -35,6 +43,7 @@ export default function ServiciosCasos() {
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
   const [postsData, setPostsData] = useState();
+  const [postToEdit, setPostToEdit] = useState();
   const toggleTheme = () => {
     dispatch({
       type: 'SET_THEME',
@@ -64,14 +73,30 @@ export default function ServiciosCasos() {
     fetchPosts();
   }, []);
 
-  const getFormatedDate = (date_str) => {
-    return formatDate(date_str);
+  const onDeletePost = async (post) => {
+    const resp = await deletePost(post._uid);
+    if (resp.ok) {
+      toast.success(
+        'Se Removio el Post, por favor Refresque la página para ver los cambios'
+      );
+    } else {
+      toast.error('Ocurrio un error');
+    }
+  };
+
+  const onCloseAddPost = () => {
+    setPostToEdit(null);
   };
 
   return (
     <>
       <Metaheader />
-      <Layout navbarClass={`hide-lg hide-xl`} session={session}>
+      <Layout
+        navbarClass={`hide-lg hide-xl`}
+        session={session}
+        postToEdit={postToEdit}
+        onCloseAddPost={onCloseAddPost}
+      >
         <div className={`${styles.Page} ${styles[state.theme]}`}>
           <div className={`${styles.SidebarLeft} hide-xs hide-sm hide-md`}>
             <div className={styles.Top}>
@@ -122,68 +147,14 @@ export default function ServiciosCasos() {
             <div className={styles.Container}>
               {postsData &&
                 postsData.map((post, i) => (
-                  <Post key={i} post={post} theme={state.theme} />
-                  // <div className={styles.Post} key={i}>
-                  //   <div className={styles.HeaderPost}>
-                  //     <div className={styles.LogoSmall}>
-                  //       {state.theme === 'dark' ? (
-                  //         <ImageComp
-                  //           src="/assets/images/logo-light-small.png"
-                  //           width={41}
-                  //           height={42}
-                  //           alt=""
-                  //         />
-                  //       ) : (
-                  //         <ImageComp
-                  //           src="/assets/images/logo-dark-small.png"
-                  //           width={41}
-                  //           height={42}
-                  //           alt=""
-                  //         />
-                  //       )}
-                  //     </div>
-                  //     <span>Equioral</span>
-                  //   </div>
-                  //   <Carousel
-                  //     theme={state.theme}
-                  //     data={defaultPosts[0].media}
-                  //   />
-                  //   <div className={styles.ActionsPost}>
-                  //     <div className={styles.Left}>
-                  //       <div className={styles.Action}>
-                  //         <HeartIcon
-                  //           fill={state.theme === 'dark' ? '#fff' : '#000'}
-                  //           size={24}
-                  //         />
-                  //       </div>
-                  //       <div className={styles.Action}>
-                  //         <ShareIcon
-                  //           fill={state.theme === 'dark' ? '#fff' : '#000'}
-                  //           size={24}
-                  //         />
-                  //       </div>
-                  //     </div>
-                  //     <div className={styles.Right}>
-                  //       <div className={styles.Action}>
-                  //         <WhatsappIcon
-                  //           fill={state.theme === 'dark' ? '#fff' : '#000'}
-                  //           size={24}
-                  //         />
-                  //       </div>
-                  //     </div>
-                  //   </div>
-                  //   <div className={styles.InfoPost}>
-                  //     <div className={styles.Title}>
-                  //       <div className={styles.Name}>{post.Title}</div>
-                  //       <div className={styles.Date}>
-                  //         {getFormatedDate(post.Date)}
-                  //       </div>
-                  //     </div>
-                  //     <div className={styles.Description}>
-                  //       {post.Description}
-                  //     </div>
-                  //   </div>
-                  // </div>
+                  <Post
+                    key={i}
+                    post={post}
+                    theme={state.theme}
+                    session={session}
+                    onEdit={(post) => setPostToEdit(post)}
+                    onDelete={onDeletePost}
+                  />
                 ))}
               {!postsData && (
                 <div className={styles.Post}>

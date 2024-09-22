@@ -20,7 +20,7 @@
     height: 62px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     gap:10px;
 }
@@ -31,23 +31,39 @@
     }
 }
 
-.HeaderPost span{
+.LogoContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.LogoContainer span{
     font-size: 12px;
     line-height: 100%;
     font-weight: 600;
 }
 
-.HeaderPost .LogoSmall{
+.LogoContainer .LogoSmall{
     width: auto;
     min-width: 41px;
     height: 100%;
     border-radius: 50%;
 }
 
-.HeaderPost .LogoSmallLabel{
+.LogoContainer .LogoSmallLabel{
     width: auto;
     min-width: 60px;
     height: 50%;
+}
+
+.Menu{
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .MediaPost{

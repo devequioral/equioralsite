@@ -1,60 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import styles from './AddPost.module.css';
-import { Button, DateInput, Input, Textarea } from '@nextui-org/react';
-import { AddIcon } from '@virtel/icons';
 import ModalComponent from '@/components/ModalComponent/ModalComponent';
 import {
-  DateValue,
-  now,
-  parseAbsoluteToLocal,
   getLocalTimeZone,
+  parseAbsoluteToLocal,
 } from '@internationalized/date';
+import { Button, DateInput, Input, Textarea } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
+import { AddIcon } from '@virtel/icons';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import MediaUpload from '../MediaUpload/MediaUpload';
+import styles from './AddPost.module.css';
 
-async function createPost(title, description, date, photos) {
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/new`;
+async function savePost(uid, title, description, date, photos) {
+  let url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/`;
+  url += uid ? 'update' : 'new';
   const body = new FormData();
+  body.append('_uid', uid);
   body.append('title', title);
   body.append('description', description);
   body.append('date', date);
-  let count_photos = 0;
-  photos.map((p) => {
-    body.append(p.name, p.photo);
-    count_photos++;
-  });
-  body.append('count_photos', count_photos);
+  if (!uid) {
+    let count_photos = 0;
+    photos.map((p) => {
+      body.append(p.name, p.photo);
+      count_photos++;
+    });
+    body.append('count_photos', count_photos);
+  }
   return await fetch(url, {
     method: 'POST',
     body,
   });
-  // return await fetch(url, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     record: { title, description, date },
-  //   }),
-  // });
 }
 
-export default function AddPost() {
+export default function AddPost({ postToEdit, onClose }) {
   const [showModal, setShowModal] = useState(0);
   const [allowSave, setAllowSave] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
+  const [uid, setUId] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [photos, setPhotos] = useState([]);
   const [photosPreview, setPhotosPreview] = useState([]);
+  const [validation, setValidation] = useState({});
   const [date, setDate] = React.useState(
     parseAbsoluteToLocal(new Date().toISOString())
   );
   const onSavePost = async () => {
     setSavingPost(true);
-    const date_str = date.toDate(getLocalTimeZone()).toISOString();
-    const resp = await createPost(title, description, date_str, photos);
+    const date_str = !date ? '' : date.toDate(getLocalTimeZone()).toISOString();
+    const resp = await savePost(uid, title, description, date_str, photos);
     if (resp.ok) {
       setShowModal(0);
       setTitle('');
@@ -63,6 +57,11 @@ export default function AddPost() {
       toast.success('Servicio / Caso Publicado');
     } else {
       toast.error('Ocurrio un problema intente nuevamente');
+      setSavingPost(false);
+      const resp_json = await resp.json();
+      if (resp_json.validation) {
+        setValidation(resp_json.validation);
+      }
     }
   };
   useEffect(() => {
@@ -83,6 +82,21 @@ export default function AddPost() {
     setPhotosPreview((c) => [...c, preview]);
   };
 
+  useEffect(() => {
+    if (postToEdit) {
+      setTitle(postToEdit.Title);
+      setDescription(postToEdit.Description);
+      setDate(parseAbsoluteToLocal(postToEdit.Date));
+      setUId(postToEdit._uid);
+      const previews = [];
+      postToEdit.Photos.map((photo) => {
+        previews.push(photo.url);
+      });
+      setPhotosPreview(previews);
+      setShowModal((c) => c + 1);
+    }
+  }, [postToEdit]);
+
   return (
     <>
       <div className={styles.AddPostButton}>
@@ -98,6 +112,7 @@ export default function AddPost() {
           setTitle('');
           setDescription('');
           setSavingPost(false);
+          if (onClose) onClose();
         }}
         allowSave={allowSave}
         savingRecord={savingPost}
@@ -109,13 +124,23 @@ export default function AddPost() {
               type="text"
               label="Titulo"
               onChange={(e) => setTitle(e.target.value)}
+              defaultValue={title || ''}
+              color={validation.title ? 'danger' : 'default'}
             />
+            {validation.title && (
+              <p className="text-danger">{validation.title}</p>
+            )}
           </div>
           <div className={styles.InputGroup}>
             <Textarea
               label="Descripción"
               onChange={(e) => setDescription(e.target.value)}
+              defaultValue={description || ''}
+              color={validation.description ? 'danger' : 'default'}
             />
+            {validation.description && (
+              <p className="text-danger">{validation.description}</p>
+            )}
           </div>
           <div className={styles.InputGroup}>
             <I18nProvider locale="es-CO">
@@ -124,8 +149,12 @@ export default function AddPost() {
                 value={date}
                 onChange={setDate}
                 granularity="day"
+                color={validation.date ? 'danger' : 'default'}
               />
             </I18nProvider>
+            {validation.date && (
+              <p className="text-danger">{validation.date}</p>
+            )}
           </div>
           <div className={styles.InputGroup}>
             <input
@@ -141,9 +170,14 @@ export default function AddPost() {
                 </div>
               ))}
             </div>
-            <label htmlFor="file" className={styles.MediaUploadInputLabel}>
-              Agregar Foto
-            </label>
+            {!uid && (
+              <label htmlFor="file" className={styles.MediaUploadInputLabel}>
+                Agregar Foto
+              </label>
+            )}
+            {validation.Photos && (
+              <p className="text-danger">{validation.Photos}</p>
+            )}
           </div>
         </div>
       </ModalComponent>
