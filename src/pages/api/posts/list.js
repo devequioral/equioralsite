@@ -46,6 +46,10 @@ export default async function handler(req, res) {
     records.records.map((_record) => {
       delete _record._id;
       delete _record.updatedAt;
+      _record.Photos.map((photo) => {
+        delete photo.private_url;
+        delete photo.key;
+      });
     });
 
     res.status(200).json({ data: records });

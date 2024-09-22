@@ -138,6 +138,7 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
     wrapperRef.current.style.transform = `translateX(${_translateValue}px)`;
     setTranslateValue(_translateValue);
   };
+
   return (
     <div
       className={`${styles.Carousel} ${styles[theme]}`}
@@ -149,12 +150,7 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
       <div ref={wrapperRef} className={styles.CarouselWrapper}>
         {data.map((media, i) => (
           <div className={styles.ImageCnt} key={i}>
-            <ImageComp
-              src={media.url}
-              width={media.width}
-              height={media.height}
-              alt={media.alt}
-            />
+            <ImageComp src={media.url} width={480} height={480} alt={''} />
           </div>
         ))}
       </div>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Post.module.css';
-import defaultPosts from '@/data/defaultPosts.json';
 import ImageComp from '../ImageComp/ImageComp';
 import Carousel from '../Carousel/Carousel';
 import { HeartIcon, ShareIcon, WhatsappIcon } from '@virtel/icons';
@@ -42,7 +41,7 @@ export default function Post({ theme, post }) {
         </div>
         <span>Equioral</span>
       </div>
-      <Carousel theme={theme} data={defaultPosts[0].media} />
+      <Carousel theme={theme} data={post.Photos} />
       <div className={styles.ActionsPost}>
         <div className={styles.Left}>
           <div className={styles.Action}>
