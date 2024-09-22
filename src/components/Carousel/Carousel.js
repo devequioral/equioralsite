@@ -40,7 +40,7 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
     setMinDistance(0);
     setCompWidth(getWidthRef(wrapperRef));
     setCarouselWidth(getWidthRef(carouselRef));
-    setTotalSlides(data.length || 0);
+    setTotalSlides(data && data.length ? data.length : 0);
   }, []);
 
   const onTouchStart = (e) => {
@@ -148,11 +148,12 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
       ref={carouselRef}
     >
       <div ref={wrapperRef} className={styles.CarouselWrapper}>
-        {data.map((media, i) => (
-          <div className={styles.ImageCnt} key={i}>
-            <ImageComp src={media.url} width={480} height={480} alt={''} />
-          </div>
-        ))}
+        {data &&
+          data.map((media, i) => (
+            <div className={styles.ImageCnt} key={i}>
+              <ImageComp src={media.url} width={480} height={480} alt={''} />
+            </div>
+          ))}
       </div>
       {showPreNav && (
         <div className={styles.PrevNav} onClick={onClickPrevNav}>
@@ -167,10 +168,11 @@ export default function Carousel({ data, theme, edgeOffset = 0 }) {
       <div
         ref={circlesMarksRef}
         className={`${styles.CirclesMarks} ${
-          data.length < 6 ? styles.alignCenter : ''
+          data && data.length < 6 ? styles.alignCenter : ''
         }`}
       >
-        {data.length > 1 &&
+        {data &&
+          data.length > 1 &&
           data.map((media, i) => (
             <div
               className={`${styles.CircleMark} ${

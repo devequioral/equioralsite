@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Post.module.css';
 import ImageComp from '../ImageComp/ImageComp';
 import Carousel from '../Carousel/Carousel';
@@ -18,6 +18,7 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
     return formatDate(date_str);
   };
   const formatDescription = (description) => {
+    if (!description) return '';
     if (!extendDescription) {
       return description.length > 150
         ? `${description.substr(0, 150)}...`

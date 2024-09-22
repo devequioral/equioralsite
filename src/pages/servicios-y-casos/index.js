@@ -28,6 +28,22 @@ async function getPosts(page = 1, pageSize = 20, search = '') {
   });
 }
 
+async function getPost(slug) {
+  const post_url = `/servicios-y-casos/${slug}`;
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/get?url=${post_url}`;
+  const resp = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (resp.ok) {
+    return await resp.json();
+  }
+
+  return [];
+}
+
 async function deletePost(uid) {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/delete?uid=${uid}`;
   return await fetch(url, {
@@ -38,11 +54,11 @@ async function deletePost(uid) {
   });
 }
 
-export default function ServiciosCasos() {
+export default function ServiciosCasos({ staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
-  const [postsData, setPostsData] = useState();
+  const [postsData, setPostsData] = useState(staticdata);
   const [postToEdit, setPostToEdit] = useState();
   const toggleTheme = () => {
     dispatch({
@@ -70,7 +86,7 @@ export default function ServiciosCasos() {
   };
 
   useEffect(() => {
-    fetchPosts();
+    //fetchPosts();
   }, []);
 
   const onDeletePost = async (post) => {
@@ -205,4 +221,22 @@ export default function ServiciosCasos() {
       </Layout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  let resp = await getPosts();
+  let staticdata = [];
+  if (resp.ok) {
+    const resp_json = await resp.json();
+    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
+      staticdata = [...resp_json.data.records];
+    }
+  }
+
+  return {
+    props: {
+      staticdata,
+    },
+    revalidate: 10,
+  };
 }

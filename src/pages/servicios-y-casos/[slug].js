@@ -1,28 +1,52 @@
-import styles from '@/styles/ServiciosCasos.module.css';
-import MainNavbar from '@/components/MainNavbar/MainNavbar';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { AppContext } from '@/context/AppContext';
 import ImageComp from '@/components/ImageComp/ImageComp';
-import Link from 'next/link';
-import {
-  HeartIcon,
-  ShareIcon,
-  ThemeDarkIcon,
-  ThemeLightIcon,
-  WhatsappIcon,
-} from '@virtel/icons';
-import postsData from '@/data/defaultPosts.json';
-import storiesData from '@/data/defaultStories.json';
-import Stories from '@/components/Stories/Stories';
-import Carousel from '@/components/Carousel/Carousel';
-import { Button } from '@nextui-org/react';
-import Metaheader from '@/components/Metaheader/Metaheader';
 import Layout from '@/components/Layout/Layout';
+import Metaheader from '@/components/Metaheader/Metaheader';
+import Post from '@/components/Post/Post';
+import Stories from '@/components/Stories/Stories';
+import { AppContext } from '@/context/AppContext';
+import storiesData from '@/data/defaultStories.json';
+import styles from '@/styles/ServiciosCasos.module.css';
+import { Button } from '@nextui-org/react';
+import { ThemeDarkIcon, ThemeLightIcon, WhatsappIcon } from '@virtel/icons';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-async function listPosts(page) {
-  await new Promise((res) => setTimeout(res, 5000));
-  return { records: postsData, totalPages: 3, page };
+async function getPosts(page = 1, pageSize = 20, search = '') {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+async function getPost(slug) {
+  const post_url = `/servicios-y-casos/${slug}`;
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/get?url=${post_url}`;
+  const resp = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (resp.ok) {
+    return await resp.json();
+  }
+
+  return [];
+}
+
+async function deletePost(uid) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/delete?uid=${uid}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 }
 
 function getDocHeight() {
@@ -37,9 +61,6 @@ function getDocHeight() {
   );
 }
 
-function getPost() {
-  return postsData[0];
-}
 function ScreenCaso({ slug }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
@@ -48,7 +69,8 @@ function ScreenCaso({ slug }) {
   const [totalPages, setTotalPages] = useState(1);
   const [extraPosts, setExtraPosts] = useState([]);
   const [loadingExtraPosts, setLoadingExtraPosts] = useState(false);
-  const currentPost = slug;
+  const [postToEdit, setPostToEdit] = useState();
+  const [currentPost, setCurrentPost] = useState(slug);
   const toggleTheme = () => {
     dispatch({
       type: 'SET_THEME',
@@ -70,12 +92,16 @@ function ScreenCaso({ slug }) {
     if (loadingExtraPosts) return;
     setLoadingExtraPosts(true);
     const loadedRecords = extraPosts;
-    const _extraPosts = await listPosts(currentPage + 1);
-    const new_records = _extraPosts.records || [];
-    setExtraPosts(loadedRecords.concat(new_records));
-    setCurrentPage(currentPage + 1);
-    setTotalPages(_extraPosts.totalPages);
-    setLoadingExtraPosts(false);
+    const resp = await getPosts(currentPage + 1);
+    if (resp.ok) {
+      const resp_json = await resp.json();
+      const _extraPosts = resp_json.data;
+      const new_records = _extraPosts.records || [];
+      setExtraPosts(loadedRecords.concat(new_records));
+      setCurrentPage(currentPage + 1);
+      setTotalPages(_extraPosts.totalPages);
+      setLoadingExtraPosts(false);
+    }
   };
 
   useEffect(() => {
@@ -98,10 +124,30 @@ function ScreenCaso({ slug }) {
       window.removeEventListener('scroll', onScrollBottom);
     };
   }, [currentPage, loadingExtraPosts]);
+  const onDeletePost = async (post) => {
+    const resp = await deletePost(post._uid);
+    if (resp.ok) {
+      toast.success(
+        'Se Removio el Post, por favor Refresque la página para ver los cambios'
+      );
+    } else {
+      toast.error('Ocurrio un error');
+    }
+  };
+  const onCloseAddPost = () => {
+    setPostToEdit(null);
+  };
+  useEffect(() => {}, [extraPosts]);
+
   return (
     <>
       <Metaheader />
-      <Layout navbarClass={`hide-lg hide-xl`} session={session}>
+      <Layout
+        navbarClass={`hide-lg hide-xl`}
+        session={session}
+        postToEdit={postToEdit}
+        onCloseAddPost={onCloseAddPost}
+      >
         <div className={`${styles.Page} ${styles[state.theme]}`}>
           <div className={`${styles.SidebarLeft} hide-xs hide-sm hide-md`}>
             <div className={styles.Top}>
@@ -150,122 +196,26 @@ function ScreenCaso({ slug }) {
           </div>
           <div className={styles.MainContent}>
             <div className={styles.Container}>
-              <div className={styles.Post}>
-                <div className={styles.HeaderPost}>
-                  <div className={styles.LogoSmall}>
-                    {state.theme === 'dark' ? (
-                      <ImageComp
-                        src="/assets/images/logo-light-small.png"
-                        width={41}
-                        height={42}
-                        alt=""
-                      />
-                    ) : (
-                      <ImageComp
-                        src="/assets/images/logo-dark-small.png"
-                        width={41}
-                        height={42}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                  <span>Equioral</span>
-                </div>
-                <Carousel theme={state.theme} data={currentPost.media} />
-                <div className={styles.ActionsPost}>
-                  <div className={styles.Left}>
-                    <div className={styles.Action}>
-                      <HeartIcon
-                        fill={state.theme === 'dark' ? '#fff' : '#000'}
-                        size={24}
-                      />
-                    </div>
-                    <div className={styles.Action}>
-                      <ShareIcon
-                        fill={state.theme === 'dark' ? '#fff' : '#000'}
-                        size={24}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.Right}>
-                    <div className={styles.Action}>
-                      <WhatsappIcon
-                        fill={state.theme === 'dark' ? '#fff' : '#000'}
-                        size={24}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.InfoPost}>
-                  <div className={styles.Title}>
-                    <div className={styles.Name}>{currentPost.info.title}</div>
-                    <div className={styles.Date}>{currentPost.info.date}</div>
-                  </div>
-                  <div className={styles.Description}>
-                    {currentPost.info.description}
-                  </div>
-                </div>
-              </div>
+              <Post
+                post={currentPost}
+                theme={state.theme}
+                session={session}
+                onEdit={(post) => setPostToEdit(post)}
+                onDelete={onDeletePost}
+              />
+
               {extraPosts.length > 0 &&
                 extraPosts.map(
                   (post, i) =>
-                    post.id !== currentPost.id && (
-                      <div className={styles.Post} key={i}>
-                        <div className={styles.HeaderPost}>
-                          <div className={styles.LogoSmall}>
-                            {state.theme === 'dark' ? (
-                              <ImageComp
-                                src="/assets/images/logo-light-small.png"
-                                width={41}
-                                height={42}
-                                alt=""
-                              />
-                            ) : (
-                              <ImageComp
-                                src="/assets/images/logo-dark-small.png"
-                                width={41}
-                                height={42}
-                                alt=""
-                              />
-                            )}
-                          </div>
-                          <span>Equioral</span>
-                        </div>
-                        <Carousel theme={state.theme} data={post.media} />
-                        <div className={styles.ActionsPost}>
-                          <div className={styles.Left}>
-                            <div className={styles.Action}>
-                              <HeartIcon
-                                fill={state.theme === 'dark' ? '#fff' : '#000'}
-                                size={24}
-                              />
-                            </div>
-                            <div className={styles.Action}>
-                              <ShareIcon
-                                fill={state.theme === 'dark' ? '#fff' : '#000'}
-                                size={24}
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.Right}>
-                            <div className={styles.Action}>
-                              <WhatsappIcon
-                                fill={state.theme === 'dark' ? '#fff' : '#000'}
-                                size={24}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.InfoPost}>
-                          <div className={styles.Title}>
-                            <div className={styles.Name}>{post.info.title}</div>
-                            <div className={styles.Date}>{post.info.date}</div>
-                          </div>
-                          <div className={styles.Description}>
-                            {post.info.description}
-                          </div>
-                        </div>
-                      </div>
+                    post._uid !== currentPost._uid && (
+                      <Post
+                        post={post}
+                        theme={state.theme}
+                        session={session}
+                        onEdit={(post) => setPostToEdit(post)}
+                        onDelete={onDeletePost}
+                        key={i}
+                      />
                     )
                 )}
               {extraPosts.length > 0 && currentPage < totalPages && (
@@ -329,7 +279,16 @@ function ScreenCaso({ slug }) {
 }
 
 export async function getStaticPaths() {
-  let posts = await listPosts();
+  const resp = await getPosts(1, 20);
+  if (!resp.ok)
+    return {
+      paths: [{ slug: '' }],
+      fallback: 'blocking',
+    };
+
+  const resp_json = await resp.json();
+
+  const posts = resp_json.data;
   let totalPages = 0;
   let paths = [];
 
@@ -342,7 +301,7 @@ export async function getStaticPaths() {
   posts.records.map((post, i) => {
     paths.push({
       params: {
-        slug: post.url,
+        slug: post.Url,
       },
     });
   });
@@ -350,13 +309,13 @@ export async function getStaticPaths() {
   totalPages = Number(posts.totalPages);
 
   for (let i = 1; i < totalPages; i++) {
-    let posts = await listPosts(i);
+    let posts = await getPosts(i);
 
     if (posts && posts.records && posts.records.length > 0) {
       posts.records.map((post, i) => {
         paths.push({
           params: {
-            slug: post.url,
+            url: post.Url,
           },
         });
       });
@@ -368,11 +327,16 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps(slug) {
-  let data = await getPost(slug);
+export async function getStaticProps(data) {
+  let resp = await getPost(data.params.slug);
+  let slug = {};
+  if (resp && resp.data && resp.data.records.length > 0) {
+    slug = { ...resp.data.records[0] };
+  }
+
   return {
     props: {
-      slug: data,
+      slug,
     },
     revalidate: 10,
   };
