@@ -1,17 +1,25 @@
-import MainNavbar from '@/components/MainNavbar/MainNavbar';
-import React, { useContext } from 'react';
-import styles from '@/styles/QuienesSomos.module.css';
-import { AppContext } from '@/context/AppContext';
 import ImageComp from '@/components/ImageComp/ImageComp';
-import Link from 'next/link';
-import { WhatsappIcon } from '@virtel/icons';
-import storiesData from '@/data/defaultStories.json';
-import Stories from '@/components/Stories/Stories';
-import Metaheader from '@/components/Metaheader/Metaheader';
 import Layout from '@/components/Layout/Layout';
+import Metaheader from '@/components/Metaheader/Metaheader';
+import Stories from '@/components/Stories/Stories';
+import { AppContext } from '@/context/AppContext';
+import styles from '@/styles/QuienesSomos.module.css';
+import { WhatsappIcon } from '@virtel/icons';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useContext } from 'react';
 
-export default function QuienesSomos() {
+async function getPosts(page = 1, pageSize = 20, search = '') {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export default function QuienesSomos({ staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   return (
@@ -81,7 +89,7 @@ export default function QuienesSomos() {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={600}
-                data={storiesData}
+                data={staticdata}
                 showName={true}
                 showLinkLabel={false}
                 storyFlex="column"
@@ -92,4 +100,22 @@ export default function QuienesSomos() {
       </Layout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  let resp = await getPosts();
+  let staticdata = [];
+  if (resp.ok) {
+    const resp_json = await resp.json();
+    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
+      staticdata = [...resp_json.data.records];
+    }
+  }
+
+  return {
+    props: {
+      staticdata,
+    },
+    revalidate: 10,
+  };
 }

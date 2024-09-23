@@ -1,17 +1,25 @@
-import MainNavbar from '@/components/MainNavbar/MainNavbar';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import styles from '@/styles/Contactanos.module.css';
-import { AppContext } from '@/context/AppContext';
 import ImageComp from '@/components/ImageComp/ImageComp';
-import Link from 'next/link';
-import { WhatsappIcon } from '@virtel/icons';
-import { Button, Input, Textarea } from '@nextui-org/react';
-import lodash from 'lodash';
-import storiesData from '@/data/defaultStories.json';
-import Stories from '@/components/Stories/Stories';
-import Metaheader from '@/components/Metaheader/Metaheader';
 import Layout from '@/components/Layout/Layout';
+import Metaheader from '@/components/Metaheader/Metaheader';
+import Stories from '@/components/Stories/Stories';
+import { AppContext } from '@/context/AppContext';
+import styles from '@/styles/Contactanos.module.css';
+import { Button, Input, Textarea } from '@nextui-org/react';
+import { WhatsappIcon } from '@virtel/icons';
+import lodash from 'lodash';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useContext, useEffect, useRef, useState } from 'react';
+
+async function getPosts(page = 1, pageSize = 20, search = '') {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
 const InputComp = (props) => {
   const { styles, type, label, name, validation } = { ...props };
@@ -65,7 +73,7 @@ const sendContact = async (formdata) => {
   });
 };
 
-export default function Contactanos() {
+export default function Contactanos({ staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [validation, setValidation] = useState({});
@@ -225,7 +233,7 @@ export default function Contactanos() {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={600}
-                data={storiesData}
+                data={staticdata}
                 showName={true}
                 showLinkLabel={false}
                 storyFlex="column"
@@ -236,4 +244,22 @@ export default function Contactanos() {
       </Layout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  let resp = await getPosts();
+  let staticdata = [];
+  if (resp.ok) {
+    const resp_json = await resp.json();
+    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
+      staticdata = [...resp_json.data.records];
+    }
+  }
+
+  return {
+    props: {
+      staticdata,
+    },
+    revalidate: 10,
+  };
 }

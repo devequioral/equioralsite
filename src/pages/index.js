@@ -3,14 +3,23 @@ import Layout from '@/components/Layout/Layout';
 import Metaheader from '@/components/Metaheader/Metaheader';
 import Stories from '@/components/Stories/Stories';
 import { AppContext } from '@/context/AppContext';
-import storiesData from '@/data/defaultStories.json';
 import styles from '@/styles/Home.module.css';
 import { WhatsappIcon } from '@virtel/icons';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { useSession } from 'next-auth/react';
 
-export default function Home() {
+async function getPosts(page = 1, pageSize = 20, search = '') {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export default function Home({ staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   return (
@@ -90,7 +99,7 @@ export default function Home() {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={767}
-                data={storiesData}
+                data={staticdata}
                 showName={true}
                 showLinkLabel={false}
                 storyFlex="column"
@@ -101,4 +110,22 @@ export default function Home() {
       </Layout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  let resp = await getPosts();
+  let staticdata = [];
+  if (resp.ok) {
+    const resp_json = await resp.json();
+    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
+      staticdata = [...resp_json.data.records];
+    }
+  }
+
+  return {
+    props: {
+      staticdata,
+    },
+    revalidate: 10,
+  };
 }

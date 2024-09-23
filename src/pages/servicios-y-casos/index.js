@@ -28,22 +28,6 @@ async function getPosts(page = 1, pageSize = 20, search = '') {
   });
 }
 
-async function getPost(slug) {
-  const post_url = `/servicios-y-casos/${slug}`;
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/get?url=${post_url}`;
-  const resp = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  if (resp.ok) {
-    return await resp.json();
-  }
-
-  return [];
-}
-
 async function deletePost(uid) {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/posts/delete?uid=${uid}`;
   return await fetch(url, {
@@ -204,7 +188,7 @@ export default function ServiciosCasos({ staticdata }) {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={599}
-                data={storiesData}
+                data={staticdata}
                 showName={true}
                 showLinkLabel={screenWidth > 991 ? true : false}
                 storyFlex={screenWidth > 991 ? 'row' : 'column'}

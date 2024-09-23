@@ -4,7 +4,6 @@ import Metaheader from '@/components/Metaheader/Metaheader';
 import Post from '@/components/Post/Post';
 import Stories from '@/components/Stories/Stories';
 import { AppContext } from '@/context/AppContext';
-import storiesData from '@/data/defaultStories.json';
 import styles from '@/styles/ServiciosCasos.module.css';
 import { Button } from '@nextui-org/react';
 import { ThemeDarkIcon, ThemeLightIcon, WhatsappIcon } from '@virtel/icons';
@@ -61,7 +60,7 @@ function getDocHeight() {
   );
 }
 
-function ScreenCaso({ slug }) {
+function ScreenCaso({ slug, staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
@@ -259,7 +258,7 @@ function ScreenCaso({ slug }) {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={599}
-                data={storiesData}
+                data={staticdata}
                 showName={true}
                 showLinkLabel={screenWidth > 991 ? true : false}
                 storyFlex={screenWidth > 991 ? 'row' : 'column'}
@@ -334,9 +333,19 @@ export async function getStaticProps(data) {
     slug = { ...resp.data.records[0] };
   }
 
+  let respPosts = await getPosts();
+  let staticdata = [];
+  if (respPosts.ok) {
+    const resp_json = await respPosts.json();
+    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
+      staticdata = [...resp_json.data.records];
+    }
+  }
+
   return {
     props: {
       slug,
+      staticdata,
     },
     revalidate: 10,
   };

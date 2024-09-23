@@ -114,25 +114,27 @@ export default function Stories({
         {orientation &&
           data.map((story, i) => (
             <Link
-              href={story.link.url}
+              href={story.Url}
               className={`${styles.Story} ${styles[storyFlex]}`}
               key={i}
             >
               <div className={styles.Border}>
                 <div className={styles.ImgCnt}>
-                  <ImageComp
-                    src={story.media.url}
-                    width={story.media.width}
-                    height={story.media.height}
-                    alt={story.media.alt}
-                  />
+                  {story.Photos && story.Photos.length > 0 && (
+                    <ImageComp
+                      src={story.Photos[0].url}
+                      width={73}
+                      height={73}
+                      alt={story.Title}
+                    />
+                  )}
                 </div>
               </div>
               {showName && (
-                <div className={`${styles.StoryName}`}>{story.name.text}</div>
+                <div className={`${styles.StoryName}`}>{story.Title}</div>
               )}
               {showLinkLabel && (
-                <div className={`${styles.StoryLink}`}>{story.link.label}</div>
+                <div className={`${styles.StoryLink}`}>Ver más</div>
               )}
             </Link>
           ))}
