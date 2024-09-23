@@ -11,6 +11,28 @@ export const config = {
   },
 };
 
+function getSlug(texto) {
+  // Convertir a minúsculas
+  let url = texto.toLowerCase();
+
+  // Quitar acentos y otros caracteres especiales
+  url = url
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, ''); // \w representa letras, números y guiones bajos
+
+  // Reemplazar espacios y otros caracteres no alfanuméricos por guiones
+  url = url.replace(/\s+/g, '-');
+
+  // Eliminar guiones repetidos
+  url = url.replace(/-+/g, '-');
+
+  // Eliminar guiones al principio y al final
+  url = url.substr(0, 1) === '-' ? url.substr(1, url.length) : url;
+  url = url.substr(-1) === '-' ? url.substr(0, url.length - 1) : url;
+  return url.trim('');
+}
+
 async function createRecord(fields) {
   const formData = new FormData();
   formData.append('_uid', sanitize(fields._uid[0]));
@@ -19,9 +41,7 @@ async function createRecord(fields) {
   formData.append('Date', sanitize(fields.date[0]));
   formData.append(
     'Url',
-    sanitize(
-      `/servicios-y-casos/${fields.title[0].replaceAll(' ', '').toLowerCase()}`
-    )
+    sanitize(`/servicios-y-casos/${getSlug(fields.title[0])}`)
   );
 
   try {

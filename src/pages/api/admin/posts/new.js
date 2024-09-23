@@ -4,12 +4,35 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import { getToken } from 'next-auth/jwt';
 import { sanitize, generateUUID } from '@/utils/utils';
+import { format } from 'path';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+function getSlug(texto) {
+  // Convertir a minúsculas
+  let url = texto.toLowerCase();
+
+  // Quitar acentos y otros caracteres especiales
+  url = url
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, ''); // \w representa letras, números y guiones bajos
+
+  // Reemplazar espacios y otros caracteres no alfanuméricos por guiones
+  url = url.replace(/\s+/g, '-');
+
+  // Eliminar guiones repetidos
+  url = url.replace(/-+/g, '-');
+
+  // Eliminar guiones al principio y al final
+  url = url.substr(0, 1) === '-' ? url.substr(1, url.length) : url;
+  url = url.substr(-1) === '-' ? url.substr(0, url.length - 1) : url;
+  return url.trim('');
+}
 
 async function createRecord(fields, files) {
   const formData = new FormData();
@@ -20,9 +43,7 @@ async function createRecord(fields, files) {
   formData.append('Photos', `Photo|${fields.count_photos[0]}`);
   formData.append(
     'Url',
-    sanitize(
-      `/servicios-y-casos/${fields.title[0].replaceAll(' ', '').toLowerCase()}`
-    )
+    sanitize(`/servicios-y-casos/${getSlug(fields.title[0])}`)
   );
 
   const count_photos = Number.parseInt(fields.count_photos[0]);
