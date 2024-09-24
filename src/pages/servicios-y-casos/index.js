@@ -31,10 +31,11 @@ async function deletePost(uid) {
 }
 
 export default function ServiciosCasos({ staticdata }) {
+  const stories = staticdata || [];
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
-  const [postsData, setPostsData] = useState(staticdata);
+  const [postsData, setPostsData] = useState(staticdata || []);
   const [postToEdit, setPostToEdit] = useState();
   const toggleTheme = () => {
     dispatch({
@@ -170,7 +171,7 @@ export default function ServiciosCasos({ staticdata }) {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={599}
-                data={staticdata}
+                data={stories}
                 showName={true}
                 showLinkLabel={screenWidth > 991 ? true : false}
                 storyFlex={screenWidth > 991 ? 'row' : 'column'}
@@ -189,14 +190,14 @@ export default function ServiciosCasos({ staticdata }) {
   );
 }
 
-export async function getStaticProps() {
-  let resp = await getPosts();
-  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
+// export async function getStaticProps() {
+//   let resp = await getPosts();
+//   let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
-  return {
-    props: {
-      staticdata,
-    },
-    revalidate: 10,
-  };
-}
+//   return {
+//     props: {
+//       staticdata,
+//     },
+//     revalidate: 10,
+//   };
+// }

@@ -66,6 +66,7 @@ const sendContact = async (formdata) => {
 };
 
 export default function Contactanos({ staticdata }) {
+  const stories = staticdata || [];
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [validation, setValidation] = useState({});
@@ -215,7 +216,7 @@ export default function Contactanos({ staticdata }) {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={600}
-                data={staticdata}
+                data={stories}
                 showName={true}
                 showLinkLabel={false}
                 storyFlex="column"
@@ -228,14 +229,14 @@ export default function Contactanos({ staticdata }) {
   );
 }
 
-export async function getStaticProps() {
-  let resp = await getPosts();
-  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
+// export async function getStaticProps() {
+//   let resp = await getPosts();
+//   let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
-  return {
-    props: {
-      staticdata,
-    },
-    revalidate: 10,
-  };
-}
+//   return {
+//     props: {
+//       staticdata,
+//     },
+//     revalidate: 10,
+//   };
+// }
