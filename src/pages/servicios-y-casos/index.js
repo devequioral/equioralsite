@@ -17,6 +17,7 @@ import Layout from '@/components/Layout/Layout';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import Post from '@/components/Post/Post';
+import Whatsapp from '@/components/Whatsapp/Whatsapp';
 
 async function getPosts(page = 1, pageSize = 20, search = '') {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
@@ -130,17 +131,7 @@ export default function ServiciosCasos({ staticdata }) {
               </div>
             </div>
             <div className={styles.Bottom}>
-              <div className={styles.Whatsapp}>
-                <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                  <div className={styles.Icon}>
-                    <WhatsappIcon
-                      size={12}
-                      fill={state.theme === 'dark' ? '#fff' : '#000'}
-                    />
-                  </div>
-                  <span>Contáctame por Whatsapp</span>
-                </Link>
-              </div>
+              <Whatsapp theme={state.theme} />
             </div>
           </div>
           <div className={styles.MainContent}>

@@ -8,6 +8,7 @@ import { WhatsappIcon } from '@virtel/icons';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { useSession } from 'next-auth/react';
+import Whatsapp from '@/components/Whatsapp/Whatsapp';
 
 async function getPosts(page = 1, pageSize = 20, search = '') {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
@@ -75,17 +76,7 @@ export default function Home({ staticdata }) {
                     />
                   </Link>
                 </div>
-                <div className={styles.Whatsapp}>
-                  <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                    <div className={styles.Icon}>
-                      <WhatsappIcon
-                        size={12}
-                        fill={state.theme === 'dark' ? '#fff' : '#000'}
-                      />
-                    </div>
-                    <span>Contáctame por Whatsapp</span>
-                  </Link>
-                </div>
+                <Whatsapp theme={state.theme} />
               </div>
             </div>
             <div className={styles.CopyRight}>

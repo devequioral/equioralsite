@@ -4,7 +4,6 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import { getToken } from 'next-auth/jwt';
 import { sanitize, generateUUID } from '@/utils/utils';
-import { format } from 'path';
 
 export const config = {
   api: {

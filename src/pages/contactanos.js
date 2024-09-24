@@ -2,6 +2,7 @@ import ImageComp from '@/components/ImageComp/ImageComp';
 import Layout from '@/components/Layout/Layout';
 import Metaheader from '@/components/Metaheader/Metaheader';
 import Stories from '@/components/Stories/Stories';
+import Whatsapp from '@/components/Whatsapp/Whatsapp';
 import { AppContext } from '@/context/AppContext';
 import styles from '@/styles/Contactanos.module.css';
 import { Button, Input, Textarea } from '@nextui-org/react';
@@ -133,17 +134,7 @@ export default function Contactanos({ staticdata }) {
                   alt=""
                 />
                 <div className={styles.InfoLinks}>
-                  <div className={styles.Whatsapp}>
-                    <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                      <div className={styles.Icon}>
-                        <WhatsappIcon
-                          size={12}
-                          fill={state.theme === 'dark' ? '#fff' : '#000'}
-                        />
-                      </div>
-                      <span>Contáctame por Whatsapp</span>
-                    </Link>
-                  </div>
+                  <Whatsapp theme={state.theme} />
                 </div>
               </div>
               <div className={styles.Column}>

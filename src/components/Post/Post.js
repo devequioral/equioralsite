@@ -12,8 +12,15 @@ import {
   Button,
 } from '@nextui-org/react';
 
+const addLike = async (_uid) => {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/addlike/?_uid=${_uid}`;
+  await fetch(url);
+};
+
 export default function Post({ theme, post, session, onEdit, onDelete }) {
   const [extendDescription, setExtendDescription] = useState(false);
+  const [liked, setLiked] = useState(false);
+
   const getFormatedDate = (date_str) => {
     return formatDate(date_str);
   };
@@ -26,6 +33,12 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
     } else {
       return description;
     }
+  };
+
+  const onAddLike = () => {
+    if (liked) return;
+    addLike(post._uid);
+    setLiked(true);
   };
 
   return (
@@ -82,8 +95,11 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
       <Carousel theme={theme} data={post.Photos} />
       <div className={styles.ActionsPost}>
         <div className={styles.Left}>
-          <div className={styles.Action}>
-            <HeartIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} />
+          <div className={styles.Action} onClick={onAddLike}>
+            <HeartIcon
+              fill={liked ? '#f00' : theme === 'dark' ? '#fff' : '#000'}
+              size={24}
+            />
           </div>
           <div className={styles.Action}>
             <ShareIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} />

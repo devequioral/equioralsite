@@ -3,6 +3,7 @@ import Layout from '@/components/Layout/Layout';
 import Metaheader from '@/components/Metaheader/Metaheader';
 import Post from '@/components/Post/Post';
 import Stories from '@/components/Stories/Stories';
+import Whatsapp from '@/components/Whatsapp/Whatsapp';
 import { AppContext } from '@/context/AppContext';
 import styles from '@/styles/ServiciosCasos.module.css';
 import { Button } from '@nextui-org/react';
@@ -180,17 +181,7 @@ function ScreenCaso({ slug, staticdata }) {
               </div>
             </div>
             <div className={styles.Bottom}>
-              <div className={styles.Whatsapp}>
-                <Link href="https://web.whatsapp.com/send?phone=573105033808&text=">
-                  <div className={styles.Icon}>
-                    <WhatsappIcon
-                      size={12}
-                      fill={state.theme === 'dark' ? '#fff' : '#000'}
-                    />
-                  </div>
-                  <span>Contáctame por Whatsapp</span>
-                </Link>
-              </div>
+              <Whatsapp theme={state.theme} />
             </div>
           </div>
           <div className={styles.MainContent}>
