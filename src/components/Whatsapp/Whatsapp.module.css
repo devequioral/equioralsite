@@ -23,11 +23,11 @@
     justify-content: center;
     align-items: center;
   }
-  .Icon.dark {
+  .Icon.bordered.dark {
     border: solid 1px #fff;
   }
 
-  .Icon.light {
+  .Icon.bordered.light {
     border: solid 1px #000;
   }
 

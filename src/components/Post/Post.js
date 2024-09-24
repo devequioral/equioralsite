@@ -11,6 +11,9 @@ import {
   DropdownItem,
   Button,
 } from '@nextui-org/react';
+import Whatsapp from '../Whatsapp/Whatsapp';
+import SharePost from '../SharePost/SharePost';
+import Link from 'next/link';
 
 const addLike = async (_uid) => {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/addlike/?_uid=${_uid}`;
@@ -102,18 +105,28 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
             />
           </div>
           <div className={styles.Action}>
-            <ShareIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} />
+            {/* <ShareIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} /> */}
+            <SharePost
+              theme={theme}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL}/${post.Url}`}
+            />
           </div>
         </div>
         <div className={styles.Right}>
           <div className={styles.Action}>
-            <WhatsappIcon fill={theme === 'dark' ? '#fff' : '#000'} size={24} />
+            <Whatsapp
+              theme={theme}
+              showLabel={false}
+              icon={{ style: 'basic', size: 24 }}
+            />
           </div>
         </div>
       </div>
       <div className={styles.InfoPost}>
         <div className={styles.Title}>
-          <div className={styles.Name}>{post.Title}</div>
+          <div className={styles.Name}>
+            <Link href={post.Url}>{post.Title}</Link>
+          </div>
           <div className={styles.Date}>{getFormatedDate(post.Date)}</div>
         </div>
         <div
