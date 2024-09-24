@@ -12,8 +12,9 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { getPosts, getPost } from '@/ssg/posts/list';
 
-async function getPosts(page = 1, pageSize = 20, search = '') {
+async function getPostsClient(page = 1, pageSize = 20, search = '') {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
   return await fetch(url, {
     method: 'GET',
@@ -21,22 +22,6 @@ async function getPosts(page = 1, pageSize = 20, search = '') {
       'Content-Type': 'application/json',
     },
   });
-}
-
-async function getPost(slug) {
-  const post_url = `/servicios-y-casos/${slug}`;
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/get?url=${post_url}`;
-  const resp = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  if (resp.ok) {
-    return await resp.json();
-  }
-
-  return [];
 }
 
 async function deletePost(uid) {
@@ -65,9 +50,9 @@ function ScreenCaso({ slug, staticdata }) {
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [extraPosts, setExtraPosts] = useState([]);
+  const [extraPosts, setExtraPosts] = useState(staticdata);
   const [loadingExtraPosts, setLoadingExtraPosts] = useState(false);
   const [postToEdit, setPostToEdit] = useState();
   const [currentPost, setCurrentPost] = useState(slug);
@@ -92,7 +77,7 @@ function ScreenCaso({ slug, staticdata }) {
     if (loadingExtraPosts) return;
     setLoadingExtraPosts(true);
     const loadedRecords = extraPosts;
-    const resp = await getPosts(currentPage + 1);
+    const resp = await getPostsClient(currentPage + 1);
     if (resp.ok) {
       const resp_json = await resp.json();
       const _extraPosts = resp_json.data;
@@ -105,7 +90,7 @@ function ScreenCaso({ slug, staticdata }) {
   };
 
   useEffect(() => {
-    fetchPosts();
+    //fetchPosts();
   }, []);
 
   useEffect(() => {
@@ -137,7 +122,6 @@ function ScreenCaso({ slug, staticdata }) {
   const onCloseAddPost = () => {
     setPostToEdit(null);
   };
-  useEffect(() => {}, [extraPosts]);
 
   return (
     <>
@@ -270,47 +254,39 @@ function ScreenCaso({ slug, staticdata }) {
 
 export async function getStaticPaths() {
   const resp = await getPosts(1, 20);
-  if (!resp.ok)
+
+  if (!resp || resp.records.length == 0)
     return {
       paths: [{ slug: '' }],
       fallback: 'blocking',
     };
-
-  const resp_json = await resp.json();
-
-  const posts = resp_json.data;
-  let totalPages = 0;
+  let totalPages = Number(resp.totalPages);
   let paths = [];
 
-  if (!posts || !posts.records || posts.records.length === 0)
-    return {
-      paths: [{ slug: '' }],
-      fallback: 'blocking',
-    };
-
-  posts.records.map((post, i) => {
+  resp.records.map((post, i) => {
+    const slug = post.Url.split('/').pop();
     paths.push({
       params: {
-        slug: post.Url,
+        slug,
       },
     });
   });
 
-  totalPages = Number(posts.totalPages);
-
-  for (let i = 1; i < totalPages; i++) {
-    let posts = await getPosts(i);
-
-    if (posts && posts.records && posts.records.length > 0) {
-      posts.records.map((post, i) => {
-        paths.push({
-          params: {
-            url: post.Url,
-          },
+  if (totalPages)
+    for (let i = 1; i < totalPages; i++) {
+      let resp = await getPosts(i, 20);
+      if (resp && resp.records.length > 0) {
+        resp.records.map((post, i) => {
+          const slug = post.Url.split('/').pop();
+          paths.push({
+            params: {
+              slug,
+            },
+          });
         });
-      });
+      }
     }
-  }
+  console.log(paths);
   return {
     paths,
     fallback: 'blocking',
@@ -318,20 +294,11 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(data) {
-  let resp = await getPost(data.params.slug);
-  let slug = {};
-  if (resp && resp.data && resp.data.records.length > 0) {
-    slug = { ...resp.data.records[0] };
-  }
+  let recordsPost = await getPost(data.params.slug);
+  let slug = recordsPost && recordsPost.length > 0 ? { ...recordsPost[0] } : {};
 
-  let respPosts = await getPosts();
-  let staticdata = [];
-  if (respPosts.ok) {
-    const resp_json = await respPosts.json();
-    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
-      staticdata = [...resp_json.data.records];
-    }
-  }
+  let resp = await getPosts();
+  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
   return {
     props: {

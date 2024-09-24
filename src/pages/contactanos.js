@@ -11,16 +11,7 @@ import lodash from 'lodash';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useContext, useEffect, useRef, useState } from 'react';
-
-async function getPosts(page = 1, pageSize = 20, search = '') {
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
-  return await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+import { getPosts } from '@/ssg/posts/list';
 
 const InputComp = (props) => {
   const { styles, type, label, name, validation } = { ...props };
@@ -239,13 +230,7 @@ export default function Contactanos({ staticdata }) {
 
 export async function getStaticProps() {
   let resp = await getPosts();
-  let staticdata = [];
-  if (resp.ok) {
-    const resp_json = await resp.json();
-    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
-      staticdata = [...resp_json.data.records];
-    }
-  }
+  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
   return {
     props: {

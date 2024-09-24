@@ -5,20 +5,9 @@ import Stories from '@/components/Stories/Stories';
 import Whatsapp from '@/components/Whatsapp/Whatsapp';
 import { AppContext } from '@/context/AppContext';
 import styles from '@/styles/QuienesSomos.module.css';
-import { WhatsappIcon } from '@virtel/icons';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useContext } from 'react';
-
-async function getPosts(page = 1, pageSize = 20, search = '') {
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/list?page=${page}&pageSize=${pageSize}&search=${search}`;
-  return await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+import { getPosts } from '@/ssg/posts/list';
 
 export default function QuienesSomos({ staticdata }) {
   const { data: session } = useSession();
@@ -95,13 +84,7 @@ export default function QuienesSomos({ staticdata }) {
 
 export async function getStaticProps() {
   let resp = await getPosts();
-  let staticdata = [];
-  if (resp.ok) {
-    const resp_json = await resp.json();
-    if (resp_json && resp_json.data && resp_json.data.records.length > 0) {
-      staticdata = [...resp_json.data.records];
-    }
-  }
+  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
   return {
     props: {
