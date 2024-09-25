@@ -91,10 +91,6 @@ function ScreenCaso({ slug, staticdata }) {
   };
 
   useEffect(() => {
-    //fetchPosts();
-  }, []);
-
-  useEffect(() => {
     if (!document) return;
     const onScrollBottom = (evt) => {
       if (
