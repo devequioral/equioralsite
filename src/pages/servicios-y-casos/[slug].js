@@ -56,7 +56,7 @@ function ScreenCaso({ slug, staticdata }) {
   const [extraPosts, setExtraPosts] = useState(staticdata || []);
   const [loadingExtraPosts, setLoadingExtraPosts] = useState(false);
   const [postToEdit, setPostToEdit] = useState();
-  const [currentPost, setCurrentPost] = useState(slug);
+  const [currentPost, setCurrentPost] = useState(slug || []);
   const toggleTheme = () => {
     dispatch({
       type: 'SET_THEME',
