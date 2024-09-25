@@ -47,12 +47,13 @@ function getDocHeight() {
 }
 
 function ScreenCaso({ slug, staticdata }) {
+  const stories = staticdata || [];
   const { data: session } = useSession();
   const { state, dispatch } = useContext(AppContext);
   const [screenWidth, setScreenWidth] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [extraPosts, setExtraPosts] = useState(staticdata);
+  const [extraPosts, setExtraPosts] = useState(staticdata || []);
   const [loadingExtraPosts, setLoadingExtraPosts] = useState(false);
   const [postToEdit, setPostToEdit] = useState();
   const [currentPost, setCurrentPost] = useState(slug);
@@ -233,7 +234,7 @@ function ScreenCaso({ slug, staticdata }) {
                 theme={state.theme}
                 edgeOffset={40}
                 mobileBreakpoint={599}
-                data={staticdata}
+                data={stories}
                 showName={true}
                 showLinkLabel={screenWidth > 991 ? true : false}
                 storyFlex={screenWidth > 991 ? 'row' : 'column'}
