@@ -190,14 +190,14 @@ export default function ServiciosCasos({ staticdata }) {
   );
 }
 
-// export async function getStaticProps() {
-//   let resp = await getPosts();
-//   let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
+export async function getStaticProps() {
+  let resp = await getPosts();
+  let staticdata = resp && resp.records.length > 0 ? [...resp.records] : [];
 
-//   return {
-//     props: {
-//       staticdata,
-//     },
-//     revalidate: 10,
-//   };
-// }
+  return {
+    props: {
+      staticdata,
+    },
+    revalidate: 10,
+  };
+}
