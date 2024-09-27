@@ -107,7 +107,7 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
           <div className={styles.Action}>
             <SharePost
               theme={theme}
-              url={`${process.env.NEXT_PUBLIC_SITE_URL}/${post.Url}`}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL}${post.Url}`}
             />
           </div>
         </div>
