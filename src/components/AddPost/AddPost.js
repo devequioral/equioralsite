@@ -55,6 +55,7 @@ export default function AddPost({ postToEdit, onClose }) {
       setDescription('');
       setSavingPost(false);
       toast.success('Servicio / Caso Publicado');
+      location.reload();
     } else {
       toast.error('Ocurrio un problema intente nuevamente');
       setSavingPost(false);
