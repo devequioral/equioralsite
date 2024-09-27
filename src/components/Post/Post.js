@@ -13,7 +13,6 @@ import {
 } from '@nextui-org/react';
 import Whatsapp from '../Whatsapp/Whatsapp';
 import SharePost from '../SharePost/SharePost';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 const addLike = async (_uid) => {
