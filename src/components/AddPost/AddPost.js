@@ -112,6 +112,8 @@ export default function AddPost({ postToEdit, onClose }) {
           setTitle('');
           setDescription('');
           setSavingPost(false);
+          setPhotos([]);
+          setPhotosPreview([]);
           if (onClose) onClose();
         }}
         allowSave={allowSave}
