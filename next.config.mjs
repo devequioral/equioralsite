@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'vidashy.vercel.app'],
+    domains: ['localhost', 'vidashy.vercel.app', 'vidashy-eight.vercel.app'],
     remotePatterns: [
       {
         protocol: 'http',
