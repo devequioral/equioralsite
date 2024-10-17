@@ -158,7 +158,7 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
         labelButtonSave="Si"
       >
         <h1>Esta Operación no se podrá deshacer</h1>
-        <p>Si esta seguro presione el botón "Si"</p>
+        <p>Si esta seguro presione el botón &quot;Si&quot;</p>
       </ModalComponent>
     </div>
   );

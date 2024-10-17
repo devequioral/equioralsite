@@ -33,7 +33,15 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
+        <p>Sorry, We are in Maintenace, we back soon...</p>
+      ) : (
+        children
+      )}
+    </AppContext.Provider>
+  );
 };
 
 export { AppContext, AppProvider, useAppContext };
