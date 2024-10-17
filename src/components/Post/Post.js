@@ -14,6 +14,7 @@ import {
 import Whatsapp from '../Whatsapp/Whatsapp';
 import SharePost from '../SharePost/SharePost';
 import { useRouter } from 'next/router';
+import ModalComponent from '@/components/ModalComponent/ModalComponent';
 
 const addLike = async (_uid) => {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/addlike/?_uid=${_uid}`;
@@ -22,6 +23,8 @@ const addLike = async (_uid) => {
 
 export default function Post({ theme, post, session, onEdit, onDelete }) {
   const [extendDescription, setExtendDescription] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(0);
   const [liked, setLiked] = useState(false);
   const router = useRouter();
 
@@ -91,7 +94,7 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
                   key="delete"
                   className="text-danger"
                   color="danger"
-                  onClick={() => onDelete(post)}
+                  onClick={() => setShowConfirmDelete((c) => c + 1)}
                 >
                   Delete
                 </DropdownItem>
@@ -142,6 +145,21 @@ export default function Post({ theme, post, session, onEdit, onDelete }) {
           {formatDescription(post.Description)}
         </div>
       </div>
+      <ModalComponent
+        show={showConfirmDelete}
+        onSave={() => {
+          setDeleting(true);
+          onDelete(post);
+        }}
+        title={'¿Esta seguro de borrar este caso?'}
+        onCloseModal={() => {}}
+        allowSave={true}
+        savingRecord={deleting}
+        labelButtonSave="Si"
+      >
+        <h1>Esta Operación no se podrá deshacer</h1>
+        <p>Si esta seguro presione el botón "Si"</p>
+      </ModalComponent>
     </div>
   );
 }
