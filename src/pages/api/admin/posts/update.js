@@ -84,6 +84,11 @@ async function createRecord(fields, files) {
 
 export default async function handler(req, res) {
   try {
+    if (process.env.MAINTENANCE_MODE === 'true') {
+      return res
+        .status(500)
+        .send({ message: 'Sorry, We are in Maintenace, we back soon...' });
+    }
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     if (!token) return res.status(401).send({ message: 'Not authorized' });
