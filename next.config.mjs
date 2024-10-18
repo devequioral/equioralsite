@@ -16,6 +16,12 @@ const nextConfig = {
         port: '80',
         pathname: '/',
       },
+      {
+        protocol: 'https',
+        hostname: 'vidashy-eight.vercel.app',
+        port: '80',
+        pathname: '/',
+      },
     ],
   },
 };
