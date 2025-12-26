@@ -49,7 +49,6 @@ async function getRecord(url) {
 
 async function getPosts(page = 1, pageSize = 20, search = '') {
   let resp = await listRecords(page, pageSize, search);
-
   if (!resp || !resp.records || resp.records.length === 0) return false;
 
   //REMOVE SENSIBLE DATA OF RECORDS
