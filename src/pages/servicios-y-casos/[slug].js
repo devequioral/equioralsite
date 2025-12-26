@@ -255,7 +255,7 @@ export async function getStaticPaths() {
 
   if (!resp || resp.records.length == 0)
     return {
-      paths: [{ slug: '' }],
+      paths: [],
       fallback: 'blocking',
     };
   let totalPages = Number(resp.totalPages);
@@ -271,7 +271,7 @@ export async function getStaticPaths() {
   });
 
   if (totalPages)
-    for (let i = 1; i < totalPages; i++) {
+    for (let i = 2; i <= totalPages; i++) {
       let resp = await getPosts(i, 20);
       if (resp && resp.records.length > 0) {
         resp.records.map((post, i) => {
